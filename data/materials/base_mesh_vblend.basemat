@@ -1,0 +1,578 @@
+<!-- Custom mesh material -->
+<?xml version="1.0" encoding="utf-8"?>
+<base_material version="2.11.0.0"  name="base_mesh_vblend" editable="0" parameters_prefix="m" defines="VERTEX_ATTRIBUTE_GEOMETRY" default="1">
+	
+	<state name="ambient_light" internal="1">1</state>
+	
+	<state name="alpha_fade"	defines="name"	internal="1"/>
+	<state name="spline"		defines="name"	internal="1"/>
+	<state name="wireframe_antialiasing"	defines="name"	internal="1"	pass_defines="wireframe"/>
+	
+	<state name="dynamic"		vegetation="0"											defines="name"	internal="1"/>
+	<state name="static_shadow"	vegetation="0"	parallax="0"	geometry_inflation="0"	defines="name"	internal="1"/>
+	
+	<group name="Default">
+		<state name="workflow" items="metalness,specular"			defines="items"	tooltip="&lt;p&gt;Workflow selection determines which textures are to be used.&lt;/p&gt;&lt;p&gt;There are two workflows available:&lt;ul&gt;&lt;li&gt;&lt;b&gt;Metalness&lt;/b&gt; — new standard of textures (albedo, metalness, roughness).&lt;/li&gt;&lt;li&gt;&lt;b&gt;Specular&lt;/b&gt; — old standard of textures (diffuse, specular, gloss).&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;It is strongly recommended to use the Metalness workflow as it uses a less number of texture channels, and uses material parameters more similar to real ones.&lt;/p&gt;"/>
+		<state name="deferred" title="Deferred Buffers"								tooltip="&lt;p&gt;Enable filling of deferred buffers.&lt;/p&gt;&lt;p&gt;Used by transparent objects to participate in post-effects.&lt;/p&gt;">1</state>
+		<state name="multiple_environment_probes" transparent="2"	defines="name"	tooltip="&lt;p&gt;Illuminate a transparent object with several environment probes and map their cubemaps to this object.&lt;/p&gt;">0</state>
+		<state name="terrain_lerp" defines="name"/>
+	</group>
+	
+	<group name="Options">
+		<state name="ao_map"								defines="name"	pass_defines="deferred,forward"	title="Ambient Occlusion"	tooltip="&lt;p&gt;Enable the Ambient Occlusion effect.&lt;/p&gt;&lt;p&gt;This effect is used to modulate global environment illumination using baked shadows from environment probe light sources.&lt;/p&gt;"/>
+		<state name="specular_map"		workflow="0"		defines="name"	pass_defines="deferred,forward"								tooltip="&lt;p&gt;Use B-channel of the &lt;b&gt;Shading Texture&lt;/b&gt; as a specular reflection intensity map.&lt;/p&gt;"/>
+		<state name="microfiber_map"						defines="name"	pass_defines="deferred,forward"								tooltip="&lt;p&gt;Use A-channel of the &lt;b&gt;Shading Texture&lt;/b&gt; as a microfiber map.&lt;/p&gt;"/>
+		<state name="translucent_map"	transparent="0,1"	defines="name"	pass_defines="deferred,forward"								tooltip="&lt;p&gt;Enable the translucency effect.&lt;/p&gt;&lt;p&gt;This effect is used to create translucent materials, that allow light to pass through.&lt;/p&gt;"/>
+		
+		<state name="detail"	defines="name"	pass_defines="deferred,transparent"	tooltip="&lt;p&gt;Enable detail rendering.&lt;/p&gt;&lt;p&gt;This effect can be used to add details for objects, that are close to camera, or variations for distant ones, to make them look more realistic.&lt;/p&gt;"/>
+		
+		<state name="emission"			defines="name"	pass_defines="ambient,deferred"								tooltip="&lt;p&gt;Enable emission rendering.&lt;/p&gt;&lt;p&gt;This effect simulates glow from extremely bright surfaces and can be used to create self-luminous objects (lamps, fire, etc.)&lt;/p&gt;"/>
+		<state name="emission_bake_gi"	defines="name"	pass_defines="ambient,emission"				emission="1"	tooltip="">1</state>
+		<state name="cross_section"		defines="name"	pass_defines="deferred,ambient,emission"	emission="1"	tooltip=""/>
+		
+		<state name="lightmap"				defines="name"	pass_defines="deferred,ambient"											tooltip="&lt;p&gt;Enable use of a lightmap.&lt;/p&gt;&lt;p&gt;Activates an additional light map texture specifying that the material will be lit by it.&lt;/p&gt;"/>
+		<state name="procedural_effects"	defines="name"	pass_defines="deferred"													tooltip="&lt;p&gt;Enable use of procedural effects: SSBevel and SSDirt.&lt;/p&gt;"/>
+		<state name="bevel"					defines="name"	pass_defines="deferred"			procedural_effects="1" title="SSBevel"	tooltip="&lt;p&gt;Enable the SSBevel effect.&lt;/p&gt;&lt;p&gt;This effect allows you to create smoothed edges of geometry and gives a realistic look to objects in the scene.&lt;/p&gt;"/>
+		<state name="curvature"				defines="name"	pass_defines="deferred"			procedural_effects="1" title="SSDirt"	tooltip="&lt;p&gt;Enable the SSDirt effect.&lt;/p&gt;&lt;p&gt;This effect allows you to simulate worn scratched edges and accumulation of dirt and dust in cavities in the screen space globally. It saves time for large complex scenes with a lot of various models and elements making them look more natural without having to prepare textures for each of them individually.&lt;/p&gt;"/>
+		<state name="auxiliary"				defines="name"	pass_defines="auxiliary"												tooltip="&lt;p&gt;Enable auxiliary rendering pass for the material.&lt;/p&gt;&lt;p&gt;Can be used for custom post-effects, such as thermal vision, etc.&lt;/p&gt;"/>
+		
+		<state name="parallax"	transparent="0,1"	defines="name"	pass_defines="deferred,emission,shadow,depth_pre_pass"	tooltip="&lt;p&gt;Enable parallax occlusion mapping.&lt;/p&gt;&lt;p&gt;Can be used to fake surface relief adding more realism with less influence on the performance.&lt;/p&gt;"/>
+		
+		<state name="vertex_color"		defines="name"	pass_defines="deferred,transparent,emission"	tooltip="&lt;p&gt;Use vertex colors for per-channel modulation of the albedo, AO, light map, emission, detail and auxiliary textures.&lt;/p&gt;&lt;p&gt;Can be used to reduce the number of textures and broaden the diversity of materials.&lt;/p&gt;"/>
+		<state name="blend_by_vertex_color"		defines="name"	pass_defines="deferred,transparent,emission"	tooltip="&lt;p&gt;Use vertex colors for per-channel modulation of the albedo, AO, light map, emission, detail and auxiliary textures.&lt;/p&gt;&lt;p&gt;Can be used to reduce the number of textures and broaden the diversity of materials.&lt;/p&gt;"/>
+		<state name="planar_reflection"	defines="name"	pass_defines="ambient"							tooltip="&lt;p&gt;Enable rendering of dynamic reflections.&lt;/p&gt;&lt;p&gt;Using this option you can create realistic flat mirrors and flat reflective surfaces (parquet, flat varnished surfaces, etc.)&lt;/p&gt;"/>
+		<state name="vegetation"		defines="name"													tooltip="&lt;p&gt;Use the material for vegetation simulation.&lt;/p&gt;&lt;p&gt;Enabling this option allows you to create materials for vegetation crowns and trunks, that can be animated to add more realism.&lt;/p&gt;"/>
+		
+		<state name="jitter_transparency"		defines="name"	pass_defines="object"	transparent="1"	/>
+		
+		<state name="lightmap_with_ambient"		defines="name"	pass_defines="deferred,ambient"	tooltip="&lt;p&gt;Allows the light map to take ambient lighting into account.&lt;/p&gt;&lt;p&gt;When unchecked, only the light map is rendered.&lt;/p&gt;">0</state>
+		
+		<state name="mip_bias"					defines="name"	pass_defines="object"	tooltip=""/>
+		
+		<state name="angle_fade" transparent="1" defines="name" tooltip="&lt;p&gt;Enables cutting out surfaces at a certain angle between the surface normal and the camera view direction vector&lt;/p&gt;&lt;p&gt;This option can be used to gain performance&lt;/p&gt;"/>	
+		
+		<state name="geometry_inflation"	items=",wire,balloon"				defines="items"			tooltip="&lt;p&gt;Makes it possible to bloat the geometry of objects to make them visible from a distant position.&lt;/p&gt;&lt;p&gt;Can be used for wires and sphere-shaped objects.&lt;/p&gt;"/>
+		
+		<state name="opacity_map"			transparent="1,2"	items="main,normal"	defines="name_items"	pass_defines="object"	tooltip="&lt;p&gt;Texture source for opacity map: A-channel of the diffuse/albedo texture or B-channel of the normal map&lt;/p&gt;"/>
+		
+		<state name="refraction"						transparent="2"																			tooltip="&lt;p&gt;Enables rendering of post-processing refraction.&lt;/p&gt;&lt;p&gt;This effect makes transparent object look more realistic by distorting an image behind it.&lt;/p&gt;"/>
+		
+		<state name="transparent_blur"		transparent="2"											tooltip="&lt;p&gt;Enable rendering of transparent blur effect.&lt;/p&gt;&lt;p&gt;This effect makes it possible to create transparent matte objects (e.g. matte glass).&lt;/p&gt;"/>
+	</group>
+	
+	<group name="Normals">
+		<state name="normal_map"				pass_defines="object"	defines="name_items"	items="tangent_space,object_space"/>
+		<state name="calculate_tangent_space"	pass_defines="object"	defines="name"			tooltip="&lt;p&gt;Enables calculation of the tangent space in the shader.&lt;/p&gt;&lt;p&gt;Can be used for materials applied to geometry with incorrect tangents or to geometry without tangents at all.&lt;/p&gt;"/>
+		<state name="normals_rotated_to_camera"							defines="name"			tooltip="All normals rotated to camera ignoring mesh normal"/>
+		<state name="backside_normal"			pass_defines="object"	defines="name_items"	items="to_back_side,to_front_side"	two_sided="1"/>
+	</group>
+	
+	<group name="Detail">
+		<state name="detail_blend"		detail="1" pass_defines="deferred,transparent"	items="alpha_blend,overlay,multiply"			defines="name_items"	title="Blending"			tooltip="&lt;p&gt;Blending mode: determines how base and detail textures are blended.&lt;/p&gt;"/>
+		<state name="detail_angle_fade"	detail="1" pass_defines="deferred,transparent"	items=",detail_angle_fade0,detail_angle_fade1"	defines="items"			title="Angle Fade"			tooltip="&lt;p&gt;Overlapping mode for base textures:&lt;ul&gt;&lt;li&gt;overlap the base material by using the object transformation (detail textures will be rotated with the mesh).&lt;/li&gt;&lt;li&gt;World transform (overlap) - overlap the base textures by using the world transformation (no matter if you rotate the object, the detail textures will always be projected atop).&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;"/>
+		<state name="detail_mask"		detail="1" pass_defines="deferred,transparent"													defines="name"			title="Mask"				tooltip="&lt;p&gt;Use a texture mask for blending base and detail materials selectively (the detail textures will be shown according to the mask).&lt;/p&gt;"/>
+		<state name="normal_substitute"	detail="1" pass_defines="deferred,transparent"													defines="name"			title="Normal Substitute"	tooltip="&lt;p&gt;Rendering mode for normals.&lt;/p&gt;&lt;p&gt;By default, normal maps of a base and detail normal map are combined together. With this option enabled, only detail normals overlaps normals.&lt;/p&gt;">0</state>
+	</group>
+	
+	<group name="UV mapping">
+		<state name="base_mapping"										items="uv0,uv1,triplanar,triplanar_world,overlap,overlap_world"				defines="name_items"													title="Base"				tooltip="UV map source for base textures"/>
+		<state name="detail_mapping"		detail="1"					items="base,uv0,uv1,triplanar,triplanar_world,overlap,overlap_world"		defines="name_items"	pass_defines="deferred,transparent"				title="Detail"				tooltip="UV map source for detail textures">1</state>
+		<state name="detail_mask_mapping"	detail="1"	detail_mask="1"	items="base,detail,uv0,uv1,triplanar,triplanar_world,overlap,overlap_world"	defines="name_items"	pass_defines="deferred,transparent"				title="Detail Mask"			tooltip="UV map source for the detail blend mask texture"/>
+		<state name="emission_mapping"		emission="1"				items="base,uv0,uv1,triplanar,triplanar_world,overlap,overlap_world"		defines="name_items"	pass_defines="deferred,transparent,emission"	title="Emission"			tooltip="UV map source for the emission texture"/>
+		<state name="ao_mapping"			ao_map="1"					items="base,uv0,uv1"														defines="name_items"	pass_defines="deferred,forward"					title="Ambient Occlusion"	tooltip="UV map source for the ambient occlusion texture">1</state>
+		<state name="lightmap_mapping"		lightmap="1"				items="base,uv0,uv1"														defines="name_items"	pass_defines="deferred,ambient"					title="Lightmap"			tooltip="UV map source for the lightmap occlusion texture">2</state>
+		<state name="bevel_mapping"			bevel="1"					items="uv0,uv1,triplanar"													defines="name_items"	pass_defines="deferred"							title="SSBevel"				tooltip="UV map source for the SSBevel map">0</state>
+	</group>
+	
+	<group name="Parallax">
+		<state name="parallax_depth_cutout"	parallax="1" transparent="0,1" defines="name" pass_defines="deferred,emission,shadow,depth_pre_pass"	title="Depth Cutout"	tooltip="&lt;p&gt;Enable the depth cutout effect providing smooth alignment with real surface geometry.&lt;/p&gt;&lt;p&gt;This effect makes a plane look like real geometry. It also improves the SSAO calculation on surfaces with parallax maps.&lt;/p&gt;"/>
+		<state name="parallax_cutout"		parallax="1" transparent="0,1" defines="name" pass_defines="deferred,emission,shadow,depth_pre_pass"	title="Cutout"			tooltip="&lt;p&gt;Enable the cutout effect providing smooth edges between the opaque and transparent areas.&lt;/p&gt;"/>
+	</group>
+	
+	<group name="Vertex Color">
+		<state name="vertex_albedo"			vertex_color="1"	workflow="0"	items=",rgb"		defines="name"			pass_defines="deferred,forward"		title="Albedo"				tooltip="Use vertex color for albedo texture"/>
+		<state name="vertex_diffuse"		vertex_color="1"	workflow="1"	items=",rgb"		defines="name"			pass_defines="deferred,forward"		title="Diffuse"				tooltip="Use vertex color for diffuse texture"/>
+		<state name="vertex_ao"				vertex_color="1"					items=",r,g,b,a"	defines="name_items"	pass_defines="deferred,forward"		title="Ambient Occlusion"	tooltip="Use vertex color for the ambient occlusion texture"/>
+		<state name="vertex_lightmap"		vertex_color="1"					items=",rgb"		defines="name"			pass_defines="deferred,ambient"		title="Light Map"			tooltip="Use vertex color for the lightmap texture"/>
+		<state name="vertex_detail_mask"	vertex_color="1"	detail="1"		items=",r,g,b,a"	defines="name_items"	pass_defines="deferred,transparent"	title="Detail Mask"			tooltip="Use vertex color for the detail mask texture"/>
+		<state name="vertex_emission"		vertex_color="1"	emission="1"	items=",rgb"		defines="name"			pass_defines="emission"				title="Emission"			tooltip="Use vertex color for the emission texture"/>
+		<state name="vertex_auxiliary"		vertex_color="1"	auxiliary="1"	items=",rgb"		defines="name"			pass_defines="auxiliary"			title="Auxiliary"			tooltip="Use vertex color for the auxiliary texture"/>
+	</group>
+	
+	<group name="Vegetation">
+		<state name="animation"				vegetation="1" items=",default,field"		defines=",ANIMATION,FIELD_ANIMATION"										tooltip="&lt;p&gt;Mode of procedural animation of wind affecting vegetation.&lt;/p&gt;&lt;p&gt;Determines if animation is enabled and controlled by Vegetation animation parameters only, or by a &lt;b&gt;FieldAnimation&lt;/b&gt; node.&lt;/p&gt;"/>
+		<state name="leafs"					vegetation="1" items=",geometry_uv_based,billboard,geometry_vertex_color_based"	defines="name_items"		title="Leaves"	tooltip="&lt;p&gt;Leaves rendering mode&lt;/p&gt;&lt;p&gt;Determines the way the geometry of leaves is rendered. Geometry mode provides more realism, but it is less performance-friendly.&lt;/p&gt;"/>
+		<state name="shadow_offset_state"	vegetation="1" pass_defines="shadow"		defines=",SHADOW_OFFSET"				title="Shadow Offset"				tooltip="&lt;p&gt;Offset parameter for leaves shadows.&lt;/p&gt;"/>
+		<state name="vegetation_velocity"	vegetation="1" title="Vegetation Velocity"	defines=",VEGETATION_VELOCITY" tooltip="&lt;p&gt;Render to velocity buffer&lt;/p&gt;">1</state>
+	</group>
+	
+	<group name="Spatial Color Noise">
+		<state name="noise_2d" transparent="0,1" defines="name" pass_defines="deferred" title="2D Noise" tooltip="&lt;p&gt;Add spatial color noise based on 2D texture.&lt;/p&gt;&lt;p&gt;Can be used to add random color variation for leaves.&lt;/p&gt;"/>
+		<state name="noise_3d" transparent="0,1" defines="name" pass_defines="deferred" title="3D Noise" tooltip="&lt;p&gt;Add spatial color noise based on 3D texture.&lt;/p&gt;&lt;p&gt;Can be used to add random color variation for leaves.&lt;/p&gt;"/>
+	</group>
+	
+	<group name="Planar Reflection">
+		<state name="reflection_size"		planar_reflection="1"	items="128,256,512,1024,2048,4096,quart_height,half_height,height"	title="Map Size"	tooltip="&lt;p&gt;Reflection map size, in pixels.&lt;/p&gt;"			>7</state>
+		<state name="reflection_two_sided"	planar_reflection="1"																		title="Two Sided"	tooltip="&lt;p&gt;Enable two-sided planar reflection mode.&lt;/p&gt;"	>0</state>
+		<state name="reflection_show_pivot"	planar_reflection="1"																		title="Show Pivot"	tooltip="&lt;p&gt;Show the reflection pivot point.&lt;/p&gt;"			>1</state>
+		<state name="reflection_blur"		planar_reflection="1"	pass_defines="reflection"	defines="name"							title="Blur"																				>1</state>
+	</group>
+	
+	<group name="Post Processing">
+		<state name="material_ssao"					deferred="1"	transparent="0,1"		title="SSAO"				tooltip="&lt;p&gt;Enable the Screen Space Ambient Occlusion effect.&lt;/p&gt;">1</state>
+		<state name="material_ssr"					deferred="1"	transparent="0,1"		title="SSR"					tooltip="&lt;p&gt;Enable the Screen Space Reflections effect.&lt;/p&gt;">1</state>
+		<state name="material_sssss"				deferred="1"	transparent="0,1"		title="SSSSS"				tooltip="&lt;p&gt;Enable the Subsurface Scattering effect.&lt;/p&gt;">0</state>
+		<state name="material_dof"					deferred="1"							title="DOF"					tooltip="&lt;p&gt;Enable Depth Of Field effect.&lt;/p&gt;">1</state>
+		<state name="material_motion_blur"			deferred="1"							title="Motion Blur"			tooltip="&lt;p&gt;Enable the Motion Blur effect.&lt;/p&gt;">1</state>
+		<state name="material_sun_shafts"			deferred="1"							title="Sun Shafts"			tooltip="&lt;p&gt;Enable the Sun Shafts effect.&lt;/p&gt;">1</state>
+		<state name="material_shoreline_wetness"	deferred="1"	transparent="0,1"		title="Shoreline Wetness"	tooltip="&lt;p&gt;Enable the wetness effect for objects near the shoreline.&lt;/p&gt;">1</state>
+	</group>
+	
+	<group name="Light Passes">
+		<state name="ambient"			transparent="2"	title="Ambient"				tooltip="&lt;p&gt;Enable rendering of the material illuminated by an environment probe light source.&lt;/p&gt;"	>1</state>
+		<state name="environment_probe"	transparent="2"	title="Environment probe"	tooltip="&lt;p&gt;Enable rendering of the material illuminated by an environment probe light source.&lt;/p&gt;"	>1</state>
+		<state name="voxel_probe"		transparent="2"	title="Voxel probe"			tooltip="&lt;p&gt;Enable rendering of the material illuminated by an voxel probe light source.&lt;/p&gt;"		>1</state>
+		<state name="light_omni"		transparent="2"	title="Light Omni"			tooltip="&lt;p&gt;Enable rendering of the material illuminated by an omni light source.&lt;/p&gt;"				>1</state>
+		<state name="light_proj"		transparent="2"	title="Light Proj"			tooltip="&lt;p&gt;Enable rendering of the material illuminated by a projected light source.&lt;/p&gt;"			>1</state>
+		<state name="light_world"		transparent="2"	title="Light World"			tooltip="&lt;p&gt;Enable rendering of the material illuminated by a world light source.&lt;/p&gt;"				>1</state>
+	</group>
+	
+	<group name="Shadows">
+		<state name="lerp_cascades"			transparent="2"	title="Lerp Cascades"	pass_defines="forward"			defines=",USE_LERP_CASCADES">0</state>
+		<state name="shadow_filter_mode"	transparent="2"	title="Filter Mode"		pass_defines="forward"			defines="name_items"		items="none,low,medium,high,ultra"	tooltip="&lt;p&gt;Filtering mode to be used for shadows from all light sources cast on the material.&lt;/p&gt;&lt;p&gt;This mode determines the quality of soft shadows reducing the stair-step effect.&lt;/p&gt;&lt;p&gt;When disabled no filtering is performed, the stair-step effect is clearly seen at the edges of shadows.&lt;/p&gt;&lt;p&gt;&lt;em&gt;Higher&lt;/em&gt; quality produces &lt;em&gt;smoother&lt;/em&gt; shadow edges.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Notice&lt;/b&gt;: &lt;em&gt;this parameter is not affected by global shadow settings defined via &lt;b&gt;Settings -> Render -> Shadows&lt;/b&gt;.&lt;/em&gt;&lt;/p&gt;">2</state>
+		<state name="shadow_penumbra_mode"	transparent="2"	title="Penumbra Mode"	pass_defines="forward"			defines="name_items"		items="none,low,medium,high,ultra"	tooltip="&lt;p&gt;Quality mode to be used for rendering penumbra from all light sources cast on the material.&lt;/p&gt;&lt;p&gt;This mode enables simulation of real-world shadows by keeping sharp contact shadows closer to the base and softening the farther the shadow stretches away.&lt;/p&gt;&lt;p&gt;When disabled shadow edges are crisp and sharp (no shadow softness at all).&lt;/p&gt;&lt;p&gt;&lt;em&gt;Higher&lt;/em&gt; quality produces &lt;em&gt;softer&lt;/em&gt; shadows.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Notice&lt;/b&gt;: &lt;em&gt;this parameter is not affected by global shadow settings defined via &lt;b&gt;Settings -> Render -> Shadows&lt;/b&gt;.&lt;/em&gt;&lt;/p&gt;">0</state>
+		<state name="shadow_filter_noise"	transparent="2"	title="Filter Noise"	pass_defines="forward"			defines="name"	shadow_filter_mode="1,2,3,4"					tooltip="&lt;p&gt;Toggles the use of noise for shadow filtering on and off. This noise is used for smoothing shadows cast on the material.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Notice&lt;/b&gt;: &lt;em&gt;this parameter is not affected by global shadow settings defined via &lt;b&gt;Settings -> Render -> Shadows&lt;/b&gt;.&lt;/em&gt;&lt;/p&gt;">1</state>
+		<state name="shadow_penumbra_noise"	transparent="2"	title="Penumbra Noise"	pass_defines="forward"			defines="name"	shadow_penumbra_mode="1,2,3,4"					tooltip="&lt;p&gt;Toggles the use of noise for penumbra rendering on and off. This noise is used for smoothing shadows cast on the material.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Notice&lt;/b&gt;: &lt;em&gt;this parameter is not affected by global shadow settings defined via &lt;b&gt;Settings -> Render -> Shadows&lt;/b&gt;.&lt;/em&gt;&lt;/p&gt;">1</state>
+		<state name="transparent_shadow"	transparent="2"							pass_defines="shadow,forward"	defines=",TRANSPARENT_SHADOW">0</state>
+	</group>
+	
+	<group name="Refraction">
+		<state name="refraction_background_incorrect"	refraction="1" defines="name" pass_defines="refraction"		title="Information Lost Fix"			tooltip="&lt;p&gt;Enables correction of refraction for &quot;information lost&quot; areas using information from areas beyond object's internal volume.&lt;/p&gt;">0</state>
+		<state name="refraction_front_side"				refraction="1" refraction_background_incorrect="1" 			title="Front Side Only"					tooltip="&lt;p&gt;Render refraction only for front faces.&lt;/p&gt;&lt;p&gt;This option can be used for glass objects with no cavities inside.  When enabled, the surface shall overlap all transparent objects located behind it.&lt;/p&gt;">0</state>
+		<state name="refraction_use_shading_texture"	refraction="1" defines="name"								title="Use Shading Texture (R Channel)"	tooltip="Use the R channel of Shading Texture as a multiplier for IOR">0</state>
+	</group>
+	
+	<!--Parameters-->
+	
+	<group name="Default">
+		<mask24 name="material_mask" deferred="1" shared="0" tooltip="&lt;p&gt;Material bitmask.&lt;/p&gt;&lt;p&gt;The decal will be projected onto a surface having this material assigned, if the material mask of the decal material matches this mask (one bit at least).&lt;/p&gt;">0xffffffff</mask24>
+	</group>
+	
+	<group name="Base">
+		<color	name="albedo_color"	workflow="0"	shared="0"	title="Albedo"		tooltip="Albedo color multiplier">1.0 1.0 1.0 1.0</color>
+		<slider	name="metalness"	workflow="0"	shared="0"						tooltip="Metalness multiplier">0.0</slider>
+		<slider	name="roughness"	workflow="0"	shared="0"						tooltip="Roughness multiplier">1.0</slider>
+		<slider	name="specular"		workflow="0"	shared="0"	title="Specular"	tooltip="Specular multiplier">0.5</slider>
+		
+		<color	name="diffuse_color"	workflow="1" shared="0"	title="Diffuse"		tooltip="Diffuse color multiplier">1.0 1.0 1.0 1.0</color>
+		<color	name="specular_color"	workflow="1" shared="0"	title="Specular"	tooltip="Specular color multiplier">0.0 0.0 0.0 1.0</color>
+		<slider	name="gloss"			workflow="1" shared="0"	title="Gloss"		tooltip="Gloss multiplier">0.0</slider>
+		
+		<slider name="microfiber" tooltip="Microfiber multiplier">0.0</slider>
+		
+		<combiner name="color"
+			albedo_color="XYZW"
+			diffuse_color="XYZW"
+		/>
+		
+		<combiner name="shading"
+			metalness="X" roughness="Y" specular="Z" microfiber="W"
+			specular_color="XYZ" gloss="W"
+		/>
+		
+		<slider name="normal_scale"	max="2.0" max_expand="1"	title="Normal Intensity"	tooltip="Intensity of the normal texture.">1.0</slider>
+		<slider name="translucent"									title="Translucent"			tooltip="Translucency multiplier.">0.0</slider>
+		
+		<slider name="transparent"			transparent="1,2"	max="10.0"	max_expand="1" title="Transparent Multiplier"	tooltip="Transparency multiplier.">1.0</slider>
+		<slider name="transparent_pow"		transparent="1,2"	max="2.0"	max_expand="1" title="Transparent Pow"			tooltip="Transparency power.">1.0</slider>
+		
+		<slider name="opacity_fresnel"		transparent="1,2"	max="1.0"					title="Opacity Fresnel"		tooltip="">0.0</slider>
+		<slider name="opacity_fresnel_pow"	transparent="1,2"	max="5.0" max_expand="1"	title="Opacity Fresnel Pow"	tooltip="">2.0</slider>
+		
+		<uv name="uv_transform"										title="UV Transform"	tooltip="UV transform. (X,Y) - scale, (Z,W) - offset.">1 1 0 0</uv>
+		<uv name="ao_uv_transform"	ao_map="1"	ao_mapping="1,2"	title="UV Transform AO"	tooltip="UV transform for Ambient Occlusion. (X,Y) - scale, (Z,W) - offset.">1 1 0 0</uv>
+		
+		<slider name="triplanar_blend"	base_mapping="2,3"							title="Triplanar Blend"	tooltip="Triplanar blending factor.">0.5</slider>
+		<slider name="mip_bias"			mip_bias="1"		min="-8.0" max="8.0"	title="Mip Bias"		tooltip="">0.0</slider>
+	</group>
+
+	<group name="Blend">
+		<slider	name="blend_factor"		blend_by_vertex_color="1"	workflow="0"	shared="0"	title="Blend factor"	tooltip="eeeeee.">0.0</slider>
+		<slider	name="blend_falloff"		blend_by_vertex_color="1"	workflow="0"	shared="0"	title="Blend fallof"	tooltip="eeeeeeee.">1.0</slider>
+	</group>
+	
+	<group name="Detail">
+		<color	name="detail_albedo_color"	detail="1"	workflow="0"	shared="0"	title="Albedo"		tooltip="Detail albedo color multiplier.">1.0 1.0 1.0 1.0</color>
+		<slider	name="detail_metalness"		detail="1"	workflow="0"	shared="0"	title="Metalness"	tooltip="Detail metalness multiplier.">0.0</slider>
+		<slider	name="detail_roughness"		detail="1"	workflow="0"	shared="0"	title="Roughness"	tooltip="Detail roughness multiplier.">1.0</slider>
+		
+		<slider	name="detail_specular"		detail="1"	workflow="0"	shared="0"	title="Specular"	tooltip="Detail specular multiplier.">0.5</slider>
+		<slider	name="detail_microfiber"	detail="1"	workflow="0"	shared="0"	microfiber_map="1"	title="Microfiber"	tooltip="Detail microfiber multiplier.">0.0</slider>
+		
+		<color	name="detail_diffuse_color"		detail="1"	workflow="1"	shared="0"	title="Diffuse"		tooltip="Detail diffuse color multiplier.">1.0 1.0 1.0 1.0</color>
+		<color	name="detail_specular_color"	detail="1"	workflow="1"	shared="0"	title="Specular"	tooltip="Detail specular color multiplier.">0.0 0.0 0.0 1.0</color>
+		<slider	name="detail_gloss"				detail="1"	workflow="1"	shared="0"	title="Gloss"		tooltip="Detail gloss multiplier.">0.0</slider>
+		
+		<combiner name="detail_color" detail="1"
+			detail_albedo_color="XYZW"
+			detail_diffuse_color="XYZW"
+		/>
+		
+		<combiner name="detail_shading" detail="1"
+			detail_metalness="X" detail_roughness="Y" detail_specular="Z" detail_microfiber="W"
+			detail_specular_color="XYZ" detail_gloss="W"
+		/>
+		
+		<uv		name="detail_uv_transform"		detail_mapping="1,2,3,4,5,6"	detail="1"	title="UV Transform"	tooltip="&lt;p&gt;UV transform for detail textures. (X,Y) - scale, (Z,W) - offset.&lt;/p&gt;">1 1 0 0</uv>
+		<slider	name="detail_triplanar_blend"	detail_mapping="3,4"			detail="1"							tooltip="&lt;p&gt;Triplanar blending factor for detail textures.&lt;/p&gt;">0.5</slider>
+		
+		<slider name="detail_visible"			detail="1"	max="2.0"	>1.0</slider>
+		<slider name="detail_visible_threshold"	detail="1"				>1.0</slider>
+		
+		<slider name="detail_albedo_color_visible"	workflow="0"	detail="1"	shared="0">1.0</slider>
+		<slider name="detail_metalness_visible"		workflow="0"	detail="1"	shared="0">1.0</slider>
+		<slider name="detail_roughness_visible"		workflow="0"	detail="1"	shared="0">1.0</slider>
+		
+		<slider name="detail_specular_visible"		workflow="0"	detail="1"	shared="0"	>1.0</slider>
+		<slider name="detail_microfiber_visible"	workflow="0"	detail="1"	shared="0"	microfiber_map="1"	>1.0</slider>
+		
+		<slider name="detail_diffuse_color_visible"		workflow="1"	detail="1"	shared="0">0.5</slider>
+		<slider name="detail_specular_color_visible"	workflow="1"	detail="1"	shared="0">0.5</slider>
+		<slider name="detail_gloss_visible"				workflow="1"	detail="1"	shared="0">0.5</slider>
+		
+		<combiner name="detail_color_visible" detail="1"
+			detail_albedo_color_visible="X"
+			detail_diffuse_color_visible="X"
+		/>
+		
+		<combiner name="detail_shading_visible" detail="1"
+			detail_metalness_visible="X" detail_roughness_visible="Y" detail_specular_visible="Z" detail_microfiber_visible="W"
+			detail_specular_color_visible="XYZ" detail_gloss_visible="W"
+		/>
+		
+		<slider name="detail_normal_visible" detail="1"	>0.5</slider>
+		
+		<!--detail mask-->
+		<uv			name="detail_mask_uv_transform"		detail_mask="1"	detail_mask_mapping=",2,3,4,5,6,7"	detail="1"	title="UV Transform"	tooltip="&lt;p&gt;Detail mask texture coordinates transformation. (X,Y) - scale, (Z,W) - offset.&lt;/p&gt;">1 1 0 0</uv>
+		<slider		name="detail_mask_triplanar_blend"	detail_mask="1"	detail_mask_mapping="4,5"			detail="1">0.5f</slider>
+		
+		<slider name="detail_angle_fade"			detail="1"	detail_angle_fade="1,2">0.5</slider>
+		<slider name="detail_angle_fade_threshold"	detail="1"	detail_angle_fade="1,2">0.5</slider>
+		
+	</group>
+	
+	<!--emission-->
+	<group name="Emission">
+		<color name="emission_color"			emission="1,2"									title="Color"			tooltip="Ambient emission color.">1.0 1.0 1.0 1.0</color>
+		<slider name="emission_scale"			emission="1,2"	max="4.0" max_expand="1"		title="Intensity"		tooltip="Ambient emission texture scale.">1.0</slider>
+		<uv		name="emission_uv_transform"	emission="1,2" emission_mapping="1,2,3,4,5,6"	title="UV Transform"	tooltip="&lt;p&gt;Emission texture coordinates transformation. (X,Y) - scale, (Z,W) - offset.&lt;/p&gt;">1 1 0 0</uv>
+		<slider	name="emission_triplanar_blend"	emission="1,2" emission_mapping="3,4"									tooltip="&lt;p&gt;Triplanar blending factor for emission textures.&lt;/p&gt;">0.5</slider>
+	</group>
+	
+	<!--lightmap-->
+	<group name="Lightmap">
+		<slider	name="lightmap_scale"			lightmap="1"				max="4.0" max_expand="1"	title="Intensity"		tooltip="&lt;p&gt;Lightmap texture scale.&lt;/p&gt;">1.0</slider>
+		<slider	name="lightmap_gamma"			lightmap="1"	min="1.0"	max="2.2" max_expand="1"	title="Gamma"			tooltip="&lt;p&gt;Lightmap texture gamma.&lt;/p&gt;&lt;p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;1.0&lt;/b&gt; is used for HDR textures&lt;/li&gt;&lt;li&gt;&lt;b&gt;2.2&lt;/b&gt; is used for non-HDR textures&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;">1.0</slider>
+		<uv		name="lightmap_uv_transform"	lightmap="1"	lightmap_mapping="1,2"					title="UV Transform"	tooltip="&lt;p&gt;Lightmap texture coordinates transformation. (X,Y) - scale, (Z,W) - offset.&lt;/p&gt;">1 1 0 0</uv>
+	</group>
+	
+	<!--bevel-->
+	<group name="SSBevel">
+		<slider	name="bevel_scale"				bevel="1"						max_expand="1"	title="Scale"					tooltip="&lt;p&gt;Scale factor for the SSBevel effect.&lt;/p&gt;&lt;p&gt;Higher values result in more pronounced effect.&lt;/p&gt;">1.0</slider>
+		<uv		name="bevel_uv_transform"		bevel="1"										title="SSBevel UV Transform"	tooltip="&lt;p&gt;UV-coordinates transformation for SSBevel map. (X,Y) - scale, (Z,W) - offset.&lt;/p&gt;">1 1 0 0</uv>
+		<slider	name="bevel_triplanar_blend"	bevel="1"	bevel_mapping="2"	max_expand="1"	title="Triplanar Blend"			tooltip="Triplanar blending factor.">0.5</slider>
+	</group>
+	
+	<!--SSDirt-->
+	<group name="SSDirt">
+		<slider	name="curvature_scale_cavity"		curvature="1"	max_expand="1"	title="Cavity Scale"			tooltip="&lt;p&gt;Scale factor for the SSDirt effect in concave areas.&lt;/p&gt;&lt;p&gt;Higher values result in more pronounced effect in slits and cavities.&lt;/p&gt;">1.0</slider>
+		<slider	name="curvature_scale_convexity"	curvature="1"	max_expand="1"	title="Convexity Scale"			tooltip="&lt;p&gt;Scale factor for the SSDirt effect in convex areas.&lt;/p&gt;&lt;p&gt;Higher values result in more pronounced effect on edges and convexities.&lt;/p&gt;">1.0</slider>
+		<uv		name="curvature_uv_transform"		curvature="1"					title="Curvature UV Transform"	tooltip="&lt;p&gt;UV-coordinates transformation for textures applied in concave and convex areas. (X,Y) - scale, (Z,W) - offset.&lt;/p&gt;">1 1 0 0</uv>
+	</group>
+	
+	<!--parallax-->
+	<group name="Parallax">
+		<slider	name="parallax_scale"				parallax="1" max="0.2" max_expand="1"	title="Height"				tooltip="&lt;p&gt;Parallax height map offset scale.&lt;/p&gt;">0.1</slider>
+		<slider	name="parallax_min_layers"			parallax="1" min="1" max="64.0"			title="Min Layers"			tooltip="&lt;p&gt;Parallax mapping minimum steps.&lt;/p&gt;">1</slider>
+		<slider	name="parallax_max_layers"			parallax="1" min="1" max="64.0"			title="Max Layers"			tooltip="&lt;p&gt;Parallax mapping maximum steps.&lt;/p&gt;">16</slider>
+		<slider	name="parallax_noise"				parallax="1" min="0" max="2.0"			title="Noise"				tooltip="&lt;p&gt;Size of the noise used for parallax mapping.&lt;/p&gt;">1.0f</slider>
+		<uv		name="parallax_cutout_uv_transform"	parallax="1" parallax_cutout="1"		title="Cutout UV Transform"	tooltip="&lt;p&gt;Parallax texture coordinates transformation. (X,Y) - scale, (Z,W) - offset.&lt;/p&gt;">1 1 0 0</uv>
+	</group>
+	
+	<!--refraction-->
+	<group name="Refraction">
+		<slider name="refraction_ior"			transparent="2" refraction="1"	min="1.0"	max="4.0"	expand="1"	title="IOR"			tooltip="&lt;p&gt;Index of refraction&lt;/p&gt;">1.2</slider>
+		<slider name="refraction_ray_length"	transparent="2" refraction="1"	min="0.0"	max="100.0"	expand="1"	title="Ray Length"	tooltip="&lt;p&gt;Length of refracted ray.&lt;/p&gt;&lt;p&gt;This parameter is used for visual correction of refraction, depending on the distance from the surface to objects behind it.&lt;/p&gt;">10.0</slider>
+		<slider name="refraction_normal_map"	transparent="2" refraction="1"	min="0.0"	max="2.0"	expand="1"	title="Normal Map"	tooltip="&lt;p&gt;Coefficient to scale the intensity of the normals (provided by a normal map).&lt;/p&gt;">1.0</slider>
+	</group>
+	
+	<!--noise 2d-->
+	<group name="Noise 2D">
+		<slider	name="noise_2d_scale"			transparent="0,1" noise_2d="1"	title="Intensity"		tooltip="&lt;p&gt;Spatial noise color transformation.&lt;/p&gt;">0.5</slider>
+		<float4	name="noise_2d_uv_transform"	transparent="0,1" noise_2d="1"	title="UV Transform"	tooltip="&lt;p&gt;Spatial noise coordinates transformation.&lt;/p&gt;">0.1 0.1 0.0 0.0</float4>
+	</group>
+	
+	<!--noise 3d-->
+	<group name="Noise 3D">
+		<slider	name="noise_3d_scale"		transparent="0,1" noise_3d="1"	title="Intensity"		tooltip="&lt;p&gt;Spatial noise color transformation.&lt;/p&gt;">0.5</slider>
+		<float3	name="noise_3d_transform"	transparent="0,1" noise_3d="1"	title="UV Transform"	tooltip="&lt;p&gt;Spatial noise coordinates transformation.&lt;/p&gt;">0.1 0.1 0.1</float3>
+	</group>
+	
+	<!-- planar reflection -->
+	<group name="Planar Reflection">
+		<mask32	name="reflection_viewport_mask"		shared="0" planar_reflection="1" title="Viewport Mask"							tooltip="&lt;p&gt;Viewport mask of the reflection camera.&lt;/p&gt;&lt;p&gt;A surface will have its reflection rendered if its viewport mask and its material viewport mask match this mask (one bit, at least).&lt;/p&gt;">0x01</mask32>
+		<float	name="reflection_distance"			shared="0" planar_reflection="1" title="Distance"								tooltip="&lt;p&gt;Reflection rendering distance, in units.&lt;/p&gt;">-1.0</float>
+		<slider	name="reflection_distance_scale"	shared="0" planar_reflection="1" title="Distance Scale"	min="0.0" max="10.0"	tooltip="Distance scale for all distance parameters: shadows distance, LOD distances, etc. Overrides the render_distance_scale while rendering planar reflections">1.0</slider>
+		<float3	name="reflection_pivot_rotation"	shared="0" planar_reflection="1" title="Pivot Rotation"							tooltip="&lt;p&gt;Rotation of the reflection pivot point.&lt;/p&gt;&lt;p&gt;Can be used to correct reflection in case if the transformation of reflective surface was changed.&lt;/p&gt;">0 0 0</float3>
+		<float3	name="reflection_pivot_offset"		shared="0" planar_reflection="1" title="Pivot Offset"							tooltip="&lt;p&gt;Position of the reflection pivot point.&lt;/p&gt;&lt;p&gt;Can be used to correct reflection in case if the transformation of reflective surface was changed.&lt;/p&gt;">0 0 0</float3>
+	</group>
+	
+	<group name="Cross Section">
+		<color name="cross_section_color" cross_section="1" tooltip="">1.0 1.0 1.0 1.0</color>
+	</group>
+	
+	<!--options-->
+	<group name="Options">
+		<color name="auxiliary_color"	auxiliary="1"				>1.0 1.0 1.0 1.0</color>
+		<slider name="vertex_balloon"	geometry_inflation="1,2"	min="-2.0" max="2.0" max_expand="1">1.0</slider>
+		<slider name="transparent_blur"	transparent="2" transparent_blur="1" max="2.0">1.0f</slider>
+	</group>
+	
+	<!--vegetation-->
+	<group name="Vegetation">
+		<slider name="shadow_offset"	vegetation="1" expand="1" shadow_offset_state="1"	min="0.0" max="4.0">0.0</slider>
+	</group>
+	
+	<group name="Angle fade">
+		<slider name="angle_power"	expand="1" angle_fade="1" min="0.0" max="2.0">0.5</slider>
+		<slider name="angle_offset"	expand="1" angle_fade="1" min="0.0" max="5.0">1.5</slider>
+	</group>
+	
+	<!--animation-->
+	<group name="Animation">
+		<slider name="animation_stem_noise"		vegetation="1" animation="1,2" shared="0"								max_expand="1"	title="Stem Noise Scale"		tooltip="&lt;p&gt;Determines the scale of a spatial noise that diversifies the direction of movement of vegetation stems.&lt;/p&gt;">1.0</slider>
+		<slider name="animation_stem_offset"	vegetation="1" animation="1,2" shared="0"								max_expand="1"	title="Stem Offset"				tooltip="&lt;p&gt;Animation offset amplitude scale for vegetation stems.&lt;/p&gt;">0.5</slider>
+		<slider name="animation_stem_radius"	vegetation="1" animation="1,2" shared="0"								max_expand="1"	title="Stem Radius"				tooltip="&lt;p&gt;Animation rotation amplitude scale for vegetation stems.&lt;/p&gt;">0.5</slider>
+		<slider name="animation_stem_scale"		vegetation="1" animation="1,2" shared="0"					max="2.0"	max_expand="1"	title="Stem Animation Speed"	tooltip="&lt;p&gt;Animation time scale for vegetation stems.&lt;/p&gt;&lt;p&gt;The &lt;em&gt;higher&lt;/em&gt; the value the faster the vegetation stems move.&lt;/p&gt;">1.0</slider>
+		<slider name="animation_branch_offset"	vegetation="1" animation="1,2" shared="0"	leafs="3"		max="2.0"	max_expand="1"	title="Branch Offset"			tooltip="">1.0</slider>
+		<slider name="animation_branch_scale"	vegetation="1" animation="1,2" shared="0"	leafs="3"		max="2.0"	max_expand="1"	title="Branch Animation Speed"	tooltip="">1.0</slider>
+		<slider name="animation_leaf_noise"		vegetation="1" animation="1,2" shared="0"	leafs="1,2,3"	max="2.0"	max_expand="1"	title="Leaves Noise Scale"		tooltip="&lt;p&gt;Determines the scale of a spatial noise that diversifies the direction of movement of vegetation leaves (seen only on several nodes with the same material).&lt;/p&gt;">1.0</slider>
+		<slider name="animation_leaf_offset"	vegetation="1" animation="1,2" shared="0"	leafs="1,2,3"	max="2.0"	max_expand="1"	title="Leaves Offset"			tooltip="&lt;p&gt;Animation offset amplitude scale for vegetation leaves.&lt;/p&gt;">1.0</slider>
+		<slider name="animation_leaf_scale"		vegetation="1" animation="1,2" shared="0"	leafs="1,2,3"	max="2.0"	max_expand="1"	title="Leaves Animation Speed"	tooltip="&lt;p&gt;Animation time scale for vegetation leaves.&lt;/p&gt;&lt;p&gt;The &lt;em&gt;higher&lt;/em&gt; the value the faster the vegetation leaves move.&lt;/p&gt;">1.0</slider>
+		<mask32 name="field_mask"				vegetation="1" animation="1,2" shared="0"												title="Field Mask"				tooltip="&lt;p&gt;Field mask that specifies an area of the animation field to be applied to stems and leaves (if rendered). This mask must match the field mask of the animation field (one bit at least).&lt;/p&gt;">0x01</mask32>
+	</group>
+	
+	<!--
+	Textures
+	-->
+	<group name="Base">
+		<texture unit="0" name="diffuse"	anisotropy="1" workflow="1" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
+		<texture unit="0" name="albedo"		anisotropy="1" workflow="0" tooltip="&lt;p&gt;Albedo color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
+		
+		<texture unit="1" name="specular"	anisotropy="1" pass="deferred,transparent,refraction" workflow="1" tooltip="&lt;p&gt;Specular reflection texture, 4 channels: RGB - reflection color, A - glossiness modulation&lt;/p&gt;">core/textures/common/white.dds</texture>
+		<texture unit="1" name="shading"	anisotropy="1" pass="deferred,transparent,refraction" workflow="0" tooltip="&lt;p&gt;Shading texture, 4 channels: R - metalness map, G - roughness map, B - specular reflection intensity for non-metals, A - microfiber map&lt;/p&gt;">core/textures/common/white.dds</texture>
+		
+		<texture unit="2" name="normal"		anisotropy="1" format="signed"	tooltip="&lt;p&gt;Normal texture:&lt;ul&gt;&lt;li&gt;2-channels: RG - normal map&lt;/li&gt;&lt;li&gt;3 channels: RG - normal map, B - opacity (available for transparent objects only, when the &lt;b&gt;Opacity map&lt;/b&gt; is set to &lt;i&gt;Normal&lt;/i&gt;)&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;This texture is used to fake a relief on a surface instead of using more polygons.&lt;/p&gt;">core/textures/common/normal.dds</texture>
+	</group>
+
+	<group name="Blend">
+		<texture unit="3" name="albedo_blend"	blend_by_vertex_color="1"   anisotropy="1" workflow="0" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
+		
+		<texture unit="4" name="shading_blend"	blend_by_vertex_color="1"   anisotropy="1" pass="deferred,transparent,refraction" workflow="0" tooltip="&lt;p&gt;Shading texture, 4 channels: R - metalness map, G - roughness map, B - specular reflection intensity for non-metals, A - microfiber map&lt;/p&gt;">core/textures/common/white.dds</texture>
+		
+		<texture unit="5" name="normal_blend"	blend_by_vertex_color="1"	anisotropy="1" format="signed"	tooltip="&lt;p&gt;Normal texture:&lt;ul&gt;&lt;li&gt;2-channels: RG - normal map&lt;/li&gt;&lt;li&gt;3 channels: RG - normal map, B - opacity (available for transparent objects only, when the &lt;b&gt;Opacity map&lt;/b&gt; is set to &lt;i&gt;Normal&lt;/i&gt;)&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;This texture is used to fake a relief on a surface instead of using more polygons.&lt;/p&gt;">core/textures/common/normal.dds</texture>
+
+		<texture unit="6" name="mask_blend"	blend_by_vertex_color="1"   anisotropy="1" workflow="0" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
+	</group>
+	
+	<group name="Detail">
+		<texture unit="3"	name="detail_diffuse"	detail="1" anisotropy="1" pass="deferred,transparent" workflow="1"		title="Diffuse"	tooltip="&lt;p&gt;Additional diffuse texture, 4 channels: RGB - color, A - opacity.&lt;/p&gt;&lt;p&gt;Can be used to add details for objects, that are close to camera, or variations for distant ones, depending on UV transform settings.&lt;/p&gt;">core/textures/common/white.dds</texture>
+		<texture unit="3"	name="detail_albedo"	detail="1" anisotropy="1" pass="deferred,transparent" workflow="0"		title="Albedo"	tooltip="&lt;p&gt;Additional albedo texture, 4 channels: RGB - color, A - opacity.&lt;/p&gt;&lt;p&gt;Can be used to add details for objects, that are close to camera, or variations for distant ones, depending on UV transform settings.&lt;/p&gt;">core/textures/common/white.dds</texture>
+		
+		<texture unit="4"	name="detail_specular"	detail="1" anisotropy="1" pass="deferred,transparent" workflow="1"		title="Specular"	tooltip="&lt;p&gt;Additional specular reflection texture, 4 channels: RGB - reflection color, A - glossiness modulation&lt;/p&gt;&lt;p&gt;Can be used to add details for objects, that are close to camera, or variations for distant ones, depending on UV transform settings.&lt;/p&gt;">core/textures/common/white.dds</texture>
+		<texture unit="4"	name="detail_shading"	detail="1" anisotropy="1" pass="deferred,transparent" workflow="0"		title="Shading"		tooltip="&lt;p&gt;Additional shading texture, 4 channels: R - metalness map, G - roughness map, B - specular reflection intensity for non-metals, A - microfiber map&lt;/p&gt;&lt;p&gt;Can be used to add details for objects, that are close to camera, or variations for distant ones, depending on UV transform settings.&lt;/p&gt;">core/textures/common/white.dds</texture>
+		
+		<texture unit="5"	name="detail_normal"	detail="1" anisotropy="1" pass="deferred,transparent" format="signed"		title="Normal"		tooltip="&lt;p&gt;Additional normal texture, 2 channels: RG - normal map.&lt;/p&gt;&lt;p&gt;Can be used to add details for objects, that are close to camera, or variations for distant ones, depending on UV transform settings.&lt;/p&gt;">core/textures/common/normal.dds</texture>
+		<texture unit="6"	name="detail_mask"		detail="1" anisotropy="1" pass="deferred,transparent" detail_mask="1"		title="Blend Mask"	tooltip="&lt;p&gt;Detail blend mask texture, 1 channel: R - blending map.&lt;/p&gt;&lt;p&gt;Determines how base and detail textures are to be blended:&lt;ul&gt;&lt;li&gt;&lt;b&gt;black&lt;/b&gt; - only base textures are shown&lt;/li&gt;&lt;li&gt;&lt;b&gt;red&lt;/b&gt; - only detail textures are shown&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;">core/textures/mesh_layer_mask.dds</texture>
+	</group>
+	
+	<group name="Options">
+		<texture unit="7"	name="ambient_occlusion"	anisotropy="1" pass="deferred,forward"			ao_map="1"		title="Ambient Occlusion"	tooltip="&lt;p&gt;Ambient occlusion texture, 1 channel: R - AO map.&lt;/p&gt;&lt;p&gt;This texture is used to modulate global environment illumination and contains baked shadows from environment probe light sources.&lt;/p&gt;">core/textures/common/red.dds</texture>
+		<texture unit="8"	name="lightmap"				anisotropy="1" pass="deferred,ambient"			lightmap="1"				tooltip="&lt;p&gt;Lightmap texture, 3 channels: RGB - light color.&lt;/p&gt;&lt;p&gt;This texture contains pre-computed light information and is usually used for static objects.&lt;/p&gt;">core/textures/common/white.dds</texture>
+		<texture unit="12"	name="procedural_effects"	anisotropy="1" pass="deferred"					procedural_effects="1" 		tooltip="&lt;p&gt;Texture used for procedural effects, 3 channels: R - bevel radius (SSBevel), G - cavity mask (SSDirt), B - convexity mask (SSDirt)&lt;/p&gt;&lt;p&gt;This texture combines maps for the SSBevel and SSDirt effects.&lt;/p&gt;">core/textures/procedural_effects.dds</texture>
+		<texture unit="9"	name="microfiber"			anisotropy="1" pass="deferred,transparent"		workflow="1"				tooltip="&lt;p&gt;Microfiber texture, 1 channel: R - microfiber map.&lt;/p&gt;">core/textures/common/red.dds</texture>
+		
+		<texture unit="3"	name="auxiliary"	anisotropy="1" pass="auxiliary"	auxiliary="1"	tooltip="&lt;p&gt;Auxiliary texture, 4 channels.&lt;/p&gt;&lt;p&gt;This texture can be used for custom effects, such as thermal vision, etc.&lt;/p&gt;">core/textures/common/white.dds</texture>
+		
+		<texture unit="10"	name="parallax"		anisotropy="1" pass="deferred,emission,shadow,depth_pre_pass"	parallax="1,2"	transparent="0,1"	tooltip="&lt;p&gt;Parallax height map texture, 1 channel: R - height map&lt;/p&gt;&lt;p&gt;This texture can be used to fake surface relief adding more realism with less influence on the performance.&lt;/p&gt;">core/textures/common/red.dds</texture>
+		
+		<texture unit="11"	name="translucent"	anisotropy="1" pass="deferred"	translucent_map="1"	transparent="0,1"	tooltip="&lt;p&gt;Translucency texture, 1 channel: R - translucency color.&lt;/p&gt;&lt;p&gt;This texture is used to specify parts of the object, that allow light to pass through.&lt;/p&gt;">core/textures/common/red.dds</texture>
+		
+		<texture unit="13"	name="noise_2d"		anisotropy="1" pass="deferred"			noise_2d="1"	transparent="0,1"	title="2D Noise"	tooltip="&lt;p&gt;Spatial color noise texture, 3 channels: RGB - color.&lt;/p&gt;&lt;p&gt;Can be used to add more realism due to color variation (e.g., for a forest). Blended in overlay mode.&lt;/p&gt;">core/textures/leaf/noise_2d.dds</texture>
+		<texture unit="13"	name="emission"		anisotropy="1" pass="emission,ambient"	emission="1"											tooltip="&lt;p&gt;Ambient emission texture, 3 channels: RGB - emission color.&lt;/p&gt;&lt;p&gt;This texture is used for self-luminous objects (lamps, fire, etc.).&lt;/p&gt;">core/textures/common/white.dds</texture>
+	</group>
+	
+	<group name="3D Noise">
+		<texture unit="14"	pass="deferred" name="noise_3d"				noise_3d="1" transparent="0,1" anisotropy="1"	title="3D Noise"		tooltip="&lt;p&gt;Color noise texture, 1 channel: R - noise.&lt;/p&gt;&lt;p&gt;This texture can be used to randomize coloring of leaves according to the gradient color texture.&lt;/p&gt;">core/textures/leaf/noise_3d.dds</texture>
+		<texture unit="15"	pass="deferred" name="noise_3d_gradient"	noise_3d="1" transparent="0,1" wrap="clamp"	title="Color gradient"	tooltip="&lt;p&gt;Color gradient texture, 3 channels: RGB - color.&lt;/p&gt;&lt;p&gt;A gradient texture that modulates colors of leaves (for example, from bright green to yellow).&lt;/p&gt;">core/textures/leaf/color.dds</texture>
+	</group>
+	
+	<texture unit="10"	type="reflection_cube"			pass="ambient"/>
+	<texture unit="11"	type="transparent_environment"	pass="ambient"				planar_reflection="0"/>
+	<texture unit="11"	type="reflection_2d"			pass="ambient,reflection"	planar_reflection="1"/>
+	<texture unit="12"	type="scattering_sky_lut"		pass="ambient"/>
+	<texture unit="14"	type="gbuffer_normal"			pass="reflection"			planar_reflection="1"/>
+	<texture unit="14"	type="light_image"				pass="forward"/>
+	<texture unit="15"	type="light_shadow_depth"		pass="forward"/>
+	<texture unit="17"	type="light_shadow_color"		pass="forward"/>
+	
+	<texture unit="16"	name="internal_noise" filter="point"	hidden="1">core/textures/common/noise.dds</texture>
+	
+	<!--
+	Passes
+	-->
+	<!--deferred-->
+		<shader pass="deferred" node="object_mesh_static"
+			deferred="1"
+			vertex="shaders/vertex/base_mesh_vblend.vert"
+			fragment="shaders/fragment/base_mesh_vblend.frag"/>
+		
+		<shader pass="depth_pre_pass" node="object_mesh_static"
+			deferred="1"
+			defines="BASE_ALPHA_TEST"
+			vertex="core/shaders/mesh/depth_pre_pass.shader"
+			fragment="core/shaders/mesh/depth_pre_pass.shader"/>
+		
+		<shader pass="reflection" node="object_mesh_static"
+			transparent="0,1"
+			deferred="1"
+			planar_reflection="1"
+			defines="BASE_REFLECTION"
+			vertex="core/shaders/mesh/opacity/reflection.shader"
+			fragment="core/shaders/mesh/opacity/reflection.shader"/>
+		
+	<!---->
+	
+	<!--transparent passes-->
+		
+		<!--forward passes-->
+			<shader pass="ambient" node="object_mesh_static"
+				transparent="2"
+				ambient="1"
+				defines="TRANSPARENT"
+				light_world_defines=",LIGHT_WORLD"
+				ambient_defines=",AMBIENT"
+				vertex="core/shaders/mesh/transparent/ambient.shader"
+				fragment="core/shaders/mesh/transparent/ambient.shader"/>
+			<shader pass="ambient" node="object_mesh_static"
+				transparent="2"
+				ambient="0"
+				light_world="1"
+				defines="TRANSPARENT"
+				light_world_defines=",LIGHT_WORLD"
+				ambient_defines=",AMBIENT"
+				vertex="core/shaders/mesh/transparent/ambient.shader"
+				fragment="core/shaders/mesh/transparent/ambient.shader"/>
+			<shader pass="ambient" node="object_mesh_static"
+				transparent="2"
+				ambient="0"
+				light_world="0"
+				emission="1"
+				defines="TRANSPARENT"
+				light_world_defines=",LIGHT_WORLD"
+				ambient_defines=",AMBIENT"
+				vertex="core/shaders/mesh/transparent/ambient.shader"
+				fragment="core/shaders/mesh/transparent/ambient.shader"/>
+			
+			<shader pass="light_omni" node="object_mesh_static"
+				transparent="2"
+				light_omni="1"
+				defines="OMNI,TRANSPARENT"
+				vertex="core/shaders/mesh/transparent/lights.shader"
+				fragment="core/shaders/mesh/transparent/lights.shader"/>
+			
+			<shader pass="light_proj" node="object_mesh_static"
+				transparent="2"
+				light_proj="1"
+				defines="PROJ,TRANSPARENT"
+				vertex="core/shaders/mesh/transparent/lights.shader"
+				fragment="core/shaders/mesh/transparent/lights.shader"/>
+			
+			<shader pass="light_world" node="object_mesh_static"
+				transparent="2"
+				light_world="1"
+				defines="WORLD,TRANSPARENT"
+				vertex="core/shaders/mesh/transparent/lights.shader"
+				fragment="core/shaders/mesh/transparent/lights.shader"/>
+			
+			<shader pass="light_environment_probe" node="object_mesh_static"
+				transparent="2"
+				ambient="1"
+				environment_probe="1"
+				defines="PROBE,TRANSPARENT"
+				vertex="core/shaders/mesh/transparent/light_probe.shader"
+				fragment="core/shaders/mesh/transparent/light_probe.shader"/>
+				
+			<shader pass="light_voxel_probe" node="object_mesh_static"
+				transparent="2"
+				ambient="1"
+				voxel_probe="1"
+				defines="VOXEL_PROBE,TRANSPARENT"
+				vertex="core/shaders/mesh/transparent/light_voxel_probe.shader"
+				fragment="core/shaders/mesh/transparent/light_voxel_probe.shader"/>
+		<!---->
+		
+		<shader pass="refraction" node="object_mesh_static"
+			transparent="2"
+			refraction="1"
+			defines="TRANSPARENT"
+			vertex="core/shaders/mesh/transparent/refraction.shader"
+			fragment="core/shaders/mesh/transparent/refraction.shader"/>
+		
+		<shader pass="transparent_blur" node="object_mesh_static"
+			transparent="2"
+			transparent_blur="1"
+			defines="TRANSPARENT"
+			vertex="core/shaders/mesh/transparent/transparent_blur.shader"
+			fragment="core/shaders/mesh/transparent/transparent_blur.shader"/>
+	<!---->
+	
+	<shader pass="shadow" node="object_mesh_static"
+		defines="BASE_SHADOW"
+		vertex="core/shaders/mesh/shadow.shader"
+		fragment="core/shaders/mesh/shadow.shader"/>
+	
+	<shader pass="auxiliary" node="object_mesh_static"
+		auxiliary="1"
+		defines="BASE_AUXILIARY"
+		vertex="core/shaders/mesh/auxiliary/auxiliary.shader"
+		fragment="core/shaders/mesh/auxiliary/auxiliary.shader"/>
+	
+	<shader pass="emission" node="object_mesh_static"
+		transparent="0,1"
+		emission="1"
+		defines="BASE_EMISSION,EMISSION"
+		vertex="core/shaders/mesh/emission/emission.shader"
+		fragment="core/shaders/mesh/emission/emission.shader"/>
+	
+	<shader pass="wireframe" node="object_mesh_static"
+		defines="BASE_WIREFRAME"
+		vertex="core/shaders/mesh/common/default.vert"
+		geometry="core/shaders/common/wireframe/wireframe.geom"
+		fragment="core/shaders/common/wireframe/wireframe.frag"/>
+	
+	<shader pass="visualizer_solid" node="object_mesh_static"
+		defines="BASE_VISUALIZER_SOLID"
+		vertex="core/shaders/mesh/common/default.vert"
+		fragment="core/shaders/common/wireframe/wireframe.frag"/>
+	
+	<!--
+	Bindings
+	-->
+	<bind node="object_mesh_cluster" to="object_mesh_static" defines="USE_CLUTTER_CLUSTER_PARAMETERS"/>
+	<bind node="object_mesh_clutter" to="object_mesh_static" defines="USE_CLUTTER_CLUSTER_PARAMETERS"/>
+	<bind node="object_mesh_dynamic" to="object_mesh_static"/>
+	<bind node="object_mesh_skinned" to="object_mesh_static" defines="SKINNED"/>
+	<bind node="object_mesh_spline_cluster" to="object_mesh_static" defines="USE_CLUTTER_CLUSTER_PARAMETERS"/>
+	
+</base_material>

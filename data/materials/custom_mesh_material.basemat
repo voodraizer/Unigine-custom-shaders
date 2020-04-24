@@ -1,0 +1,23 @@
+<!-- Custom mesh material -->
+<?xml version="1.0" encoding="utf-8"?>
+<base_material version="2.11.0.0"  name="custom_mesh_material" editable="0">
+
+	<!-- States -->
+	<state name="deferred">1</state>
+	
+	<!-- Deferred rendering shaders -->
+	<shader pass="deferred" node="object_mesh_static"
+		deferred="1"
+		defines="BASE_DEFERRED"
+		vertex="shaders/vertex/deferred.vert"
+		fragment="shaders/fragment/deferred.frag"/>
+	
+	<!-- Bindings -->
+	<bind node="object_mesh_dynamic" to="object_mesh_static"/>
+	<bind node="object_mesh_skinned" to="object_mesh_static"/>
+
+	<!-- Textures -->
+	<texture unit="0" name="albedo" anisotropy="1" shader="fragment" pass="deferred">core/textures/common/white.dds</texture>
+	<texture unit="1" name="height" shader="all" pass="deferred">core/textures/common/white.dds</texture>
+
+</base_material>
