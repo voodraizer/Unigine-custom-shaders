@@ -201,6 +201,9 @@
 		<slider	name="blend_factor"		blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend factor"	tooltip="Blend factor.">1.5</slider>
 		<slider	name="blend_falloff"		blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend fallof"	tooltip="Blend falloff.">0.3</slider>
 		<slider name="blend_alpha" blending="1" min="0.0" max="20.0" max_expand="1" title="Blend alpha"	tooltip="Blend alpha.">0.1</slider>
+
+		<slider name="dirt_alpha" blending="1" min="0.0" max="1.0" max_expand="1" title="Dirt alpha"	tooltip="Dirt alpha.">0.3</slider>
+		<slider name="dirt_roughness_coeff" blending="1" min="0.0" max="2.0" max_expand="1" title="Dirt roughness coeff"	tooltip="Dirt roughness coefficient">0.5</slider>
 	</group>
 	
 	<group name="Detail">
