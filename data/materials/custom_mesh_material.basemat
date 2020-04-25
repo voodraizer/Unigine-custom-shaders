@@ -4,6 +4,10 @@
 
 	<!-- States -->
 	<state name="deferred">1</state>
+
+	<group name="Detail">
+		<color	name="detail_albedo_color"	detail="1"	workflow="0"	shared="0"	title="Albedo"		tooltip="Detail albedo color multiplier.">1.0 1.0 1.0 1.0</color>
+	</group>
 	
 	<!-- Deferred rendering shaders -->
 	<shader pass="deferred" node="object_mesh_static"

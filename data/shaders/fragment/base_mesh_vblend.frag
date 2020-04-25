@@ -102,7 +102,12 @@ STRUCT(FRAGMENT_IN)
 	
 END
 
-#ifdef BLEND_BY_VERTEX_COLOR
+// CBUFFER(parameters)
+// 	// UNIFORM float4 m_uv_transform;
+// 	UNIFORM float m_blend_factor;
+// END
+
+#ifdef BLENDING
 	INIT_TEXTURE(3, TEX_ALBEDO_BLEND)
 	INIT_TEXTURE(4, TEX_BLEND_SHADING)
 	INIT_TEXTURE(5, TEX_BLEND_NORMAL)
@@ -111,10 +116,16 @@ END
 	// #define VERTEX_COLOR
 #endif
 
+UNIFORM float m_blend_factor;
+UNIFORM float m_blend_falloff;
+UNIFORM float m_blend_alpha;
+
 
 MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 	
-	#include <core/shaders/mesh/common/fragment.h>
+	// #include <core/shaders/mesh/common/fragment.h>
+	#include <shaders/fragment/fragment.h>
+
 	
 	// #ifdef OUT_GBUFFER_VELOCITY
 	// 	#ifdef PARALLAX
@@ -136,15 +147,28 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 
 	// gbuffer.albedo *= DATA_VERTEX_COLOR.rgb;
 
-	#ifdef BLEND_BY_VERTEX_COLOR
-	float4 blend_color =  TEXTURE_BASE(TEX_ALBEDO_BLEND);
-	float4 blend_shading = TEXTURE_BASE(TEX_BLEND_SHADING);
-	float4 blend_normal = TEXTURE_BASE_NORMAL(TEX_BLEND_NORMAL);
-	float4 blend_mask =  TEXTURE_BASE(TEX_BLEND_MASK);
-
-	gbuffer.albedo = lerp(blend_color.rgb, color.rgb, blend_mask.r * DATA_VERTEX_COLOR.r);
-	#endif
+	#ifdef BLENDING
 	
+		float4 blend_color =  TEXTURE_BASE(TEX_ALBEDO_BLEND);
+		float4 blend_shading = TEXTURE_BASE(TEX_BLEND_SHADING);
+		float4 blend_normal = TEXTURE_BASE_NORMAL(TEX_BLEND_NORMAL);
+		float4 blend_mask =  TEXTURE_BASE(TEX_BLEND_MASK);
+
+		// m_blend_factor = 0.5f;
+		// m_blend_falloff = 4.0f;
+		// m_blend_alpha = 1.3f;
+
+		float blend_coeff = m_blend_alpha * blend_mask.r * (1 + m_blend_factor);
+		blend_coeff = saturate(pow(blend_coeff, m_blend_falloff));
+
+		// gbuffer.albedo = lerp(float3(0, 0, 0), float3(1, 0, 0), DATA_VERTEX_COLOR.r);
+		// gbuffer.albedo = DATA_VERTEX_COLOR.rgb;
+
+		float3 final_albedo = lerp(blend_color.rgb, color.rgb, blend_coeff);
+		final_albedo = final_albedo * (1 - blend_mask.b * DATA_VERTEX_COLOR.b);
+
+		gbuffer.albedo = final_albedo;
+	#endif
 	
 	setGBuffer(gbuffer);
 	

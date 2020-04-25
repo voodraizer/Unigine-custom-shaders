@@ -1,13 +1,4 @@
-
-// ================================================================================
-
 #include <core/shaders/mesh/common/vertex.h>
-
-// STRUCT(FRAGMENT_IN)
-// 	INIT_POSITION
-// 	INIT_DATA(float4, 0, DATA_UV)
-// 	INIT_DATA(float4, 11, DATA_VERTEX_COLOR)
-// END
 
 STRUCT(FRAGMENT_IN)
 	INIT_POSITION
@@ -65,16 +56,9 @@ STRUCT(VERTEX_OUT)
 	INIT_OUT(float4, 1)				// Vert color
 END
 
-
 MAIN_BEGIN_VERTEX(FRAGMENT_IN)
 	#include <core/shaders/mesh/common/vertex.h>
-	// OUT_DATA(11) = IN_ATTRIBUTE(3).rgba;
 MAIN_END
-
-// ================================================================================
-
-
-
 
 
 // end

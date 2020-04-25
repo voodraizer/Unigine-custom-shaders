@@ -12,6 +12,10 @@ STRUCT(FRAGMENT_IN)
 	INIT_IN(float3,3)			// Vertex TBN (Z)
 END
 
+CBUFFER(parameters)
+	UNIFORM float4	m_detail_albedo_color;
+END
+
 MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 	
 	// Get the UV coords
@@ -32,7 +36,10 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 	
 	// Fill G-Buffer: set the calculated normal and albedo color of the texture
 	GBuffer gbuffer = GBufferDefault();
-	gbuffer.albedo = texture_data.rgb;
+
+	float3 color = m_detail_albedo_color.rgb;
+
+	gbuffer.albedo = color; //texture_data.rgb;
 	gbuffer.normal = viewspace_normal;
 
 	setGBuffer(gbuffer);

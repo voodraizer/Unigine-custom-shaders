@@ -15,6 +15,10 @@ STRUCT(VERTEX_OUT)
 	INIT_OUT(float4,0)				// Texcoord (uv)
 END
 
+CBUFFER(parameters)
+	UNIFORM float4	m_detail_albedo_color;
+END
+
 MAIN_BEGIN(VERTEX_OUT,VERTEX_IN)
 	
 	// Get transform with scale and rotation (without translation)
@@ -26,6 +30,9 @@ MAIN_BEGIN(VERTEX_OUT,VERTEX_IN)
 	float4 in_vertex = float4(IN_ATTRIBUTE(0).xyz,1.0f);
 	float4 position = mul4(row_0,row_1,row_2,in_vertex);
 	
+	// float4 m_detail_albedo_color = float4(1, 0, 0, 1);
+	// m_detail_albedo_color = float4(1, 0, 0, 1);
+
 	// Set output UV
 	float4 texcoord = IN_ATTRIBUTE(1);
 	OUT_DATA(0) = texcoord;
