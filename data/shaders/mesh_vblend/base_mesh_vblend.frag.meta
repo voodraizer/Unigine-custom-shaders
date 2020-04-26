@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.11.0.0">
+	<guid>ccfc3ddb3046597e74f7b2c5537a8560512bf93f</guid>
+	<type>file</type>
+	<hash>35d6c596</hash>
+	<runtimes>
+		<runtime id="ccfc3ddb3046597e74f7b2c5537a8560512bf93f" name="base_mesh_vblend.frag" link="0"/>
+	</runtimes>
+</asset>

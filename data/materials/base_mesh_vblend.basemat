@@ -39,7 +39,7 @@
 		<state name="parallax"	transparent="0,1"	defines="name"	pass_defines="deferred,emission,shadow,depth_pre_pass"	tooltip="&lt;p&gt;Enable parallax occlusion mapping.&lt;/p&gt;&lt;p&gt;Can be used to fake surface relief adding more realism with less influence on the performance.&lt;/p&gt;"/>
 		
 		<state name="vertex_color"		defines="name"	pass_defines="deferred,transparent,emission"	tooltip="&lt;p&gt;Use vertex colors for per-channel modulation of the albedo, AO, light map, emission, detail and auxiliary textures.&lt;/p&gt;&lt;p&gt;Can be used to reduce the number of textures and broaden the diversity of materials.&lt;/p&gt;"/>
-		<state name="blending"		defines="name"	pass_defines="deferred,emission"	tooltip="&lt;p&gt;Use vertex colors for per-channel modulation of the albedo, AO, light map, emission, detail and auxiliary textures.&lt;/p&gt;&lt;p&gt;Can be used to reduce the number of textures and broaden the diversity of materials.&lt;/p&gt;"/>
+		<state name="vertex_color_blending"		defines="name"	pass_defines="deferred,emission"	tooltip="&lt;p&gt;Use vertex colors for blend textures by vertex color.&lt;/p&gt;&lt;p&gt;Can be used to reduce the number of textures and broaden the diversity of materials.&lt;/p&gt;Mask texture: R-blend texture, G-empty, B-dirt texture (multiply).&lt;p&gt;Vertex color: R-blend r-channel, G-none, B-blend b-channel.&lt;/p&gt;"/>
 		<state name="planar_reflection"	defines="name"	pass_defines="ambient"							tooltip="&lt;p&gt;Enable rendering of dynamic reflections.&lt;/p&gt;&lt;p&gt;Using this option you can create realistic flat mirrors and flat reflective surfaces (parquet, flat varnished surfaces, etc.)&lt;/p&gt;"/>
 		<state name="vegetation"		defines="name"													tooltip="&lt;p&gt;Use the material for vegetation simulation.&lt;/p&gt;&lt;p&gt;Enabling this option allows you to create materials for vegetation crowns and trunks, that can be animated to add more realism.&lt;/p&gt;"/>
 		
@@ -198,12 +198,12 @@
 	</group>
 
 	<group name="Blending">
-		<slider	name="blend_factor"		blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend factor"	tooltip="Blend factor.">1.5</slider>
-		<slider	name="blend_falloff"		blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend fallof"	tooltip="Blend falloff.">0.3</slider>
-		<slider name="blend_alpha" blending="1" min="0.0" max="20.0" max_expand="1" title="Blend alpha"	tooltip="Blend alpha.">0.1</slider>
+		<slider	name="blend_factor"		vertex_color_blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend factor"	tooltip="Blend factor.">1.5</slider>
+		<slider	name="blend_falloff"		vertex_color_blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend fallof"	tooltip="Blend falloff.">0.3</slider>
+		<slider name="blend_alpha" vertex_color_blending="1" min="0.0" max="20.0" max_expand="1" title="Blend alpha"	tooltip="Blend alpha.">0.1</slider>
 
-		<slider name="dirt_alpha" blending="1" min="0.0" max="1.0" max_expand="1" title="Dirt alpha"	tooltip="Dirt alpha.">0.3</slider>
-		<slider name="dirt_roughness_coeff" blending="1" min="0.0" max="2.0" max_expand="1" title="Dirt roughness coeff"	tooltip="Dirt roughness coefficient">0.5</slider>
+		<slider name="dirt_alpha" vertex_color_blending="1" min="0.0" max="1.0" max_expand="1" title="Dirt alpha"	tooltip="Dirt alpha.">0.3</slider>
+		<slider name="dirt_roughness_coeff" vertex_color_blending="1" min="0.0" max="2.0" max_expand="1" title="Dirt roughness coeff"	tooltip="Dirt roughness coefficient">0.5</slider>
 	</group>
 	
 	<group name="Detail">
@@ -439,8 +439,8 @@
 	<!--deferred-->
 		<shader pass="deferred" node="object_mesh_static"
 			deferred="1"
-			vertex="shaders/vertex/base_mesh_vblend.vert"
-			fragment="shaders/fragment/base_mesh_vblend.frag"/>
+			vertex="shaders/mesh_vblend/base_mesh_vblend.vert"
+			fragment="shaders/mesh_vblend/base_mesh_vblend.frag"/>
 		
 		<shader pass="depth_pre_pass" node="object_mesh_static"
 			deferred="1"

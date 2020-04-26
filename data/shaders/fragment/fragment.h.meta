@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<asset version="2.11.0.0">
-	<guid>e9a383040b5432934c3716d6493a603d9cb32478</guid>
-	<type>script</type>
-	<hash>2bc5851</hash>
-	<runtimes>
-		<runtime id="e9a383040b5432934c3716d6493a603d9cb32478" name="fragment.h" link="0"/>
-	</runtimes>
-</asset>

@@ -1,4 +1,10 @@
-#include <core/shaders/mesh/common/vertex.h>
+#include <core/shaders/mesh/common/common.h>
+#ifdef VERTEX
+	#include <core/shaders/mesh/common/vertex.h>
+#elif FRAGMENT
+	#include <core/shaders/mesh/common/fragment.h>
+#endif
+
 
 STRUCT(FRAGMENT_IN)
 	INIT_POSITION
@@ -23,7 +29,7 @@ STRUCT(FRAGMENT_IN)
 	INIT_DATA(float3, 9, DATA_OBJECT_NORMAL)
 	INIT_DATA(float3, 10, DATA_WORLD_NORMAL)
 	
-	#ifdef VERTEX_COLOR
+	#ifdef VERTEX_COLOR || VERTEX_COLOR_BLENDING
 		INIT_DATA(float4, 11, DATA_VERTEX_COLOR)
 	#endif
 	
@@ -50,15 +56,12 @@ STRUCT(FRAGMENT_IN)
 END
 
 
-STRUCT(VERTEX_OUT)
-	INIT_POSITION					// Out projected position
-	INIT_OUT(float4, 0)				// Texcoord (uv)
-	INIT_OUT(float4, 1)				// Vert color
-END
+#ifdef VERTEX
 
-MAIN_BEGIN_VERTEX(FRAGMENT_IN)
-	#include <core/shaders/mesh/common/vertex.h>
-MAIN_END
+    STRUCT(VERTEX_OUT)
+        INIT_POSITION					// Out projected position
+        INIT_OUT(float4, 0)				// Texcoord (uv)
+        INIT_OUT(float4, 1)				// Vert color
+    END
 
-
-// end
+#endif
