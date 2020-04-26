@@ -75,8 +75,8 @@ UNIFORM float m_dirt_roughness_coeff;
 
 MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 	
-	// #include <core/shaders/mesh/common/fragment.h>
-	#include <shaders/fragment/fragment.h>
+	#include <core/shaders/mesh/common/fragment.h>
+	// #include <shaders/fragment/fragment.h>
 	
 	// #ifdef OUT_GBUFFER_VELOCITY
 	// 	#ifdef PARALLAX
@@ -106,7 +106,7 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 
 		float3 final_albedo;
 		float3 final_shading = float3(0, 0, 0);
-		float3 final_normal = float3(0, 0, 0.5);
+		float3 final_normal = float3(0, 0, 1.0);
 
 		// Blend 1-st texture (R-channel).
 		// m_blend_factor = 0.5f; m_blend_falloff = 4.0f; m_blend_alpha = 1.3f;
@@ -117,9 +117,10 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 
 		final_shading.g = lerp(blend_shading.g, shading.g, blend_coeff);
 
-		// final_normal = lerp(blend_normal.rgb, GBUFFER.normal.rgb, blend_coeff);
-		// normal_map = TEXTURE_BASE_NORMAL(TEX_NORMAL);
-		// final_normal = lerp(blend_normal.rgb, normal_map.rgb, blend_coeff);
+		float3 ts_blend_normal = blend_normal.xyz;
+		ts_blend_normal.z = getNormalZ(ts_blend_normal);
+		ts_blend_normal = lerp(float3(0.0, 0.0, 1.0), ts_blend_normal, m_normal_scale);
+		final_normal = lerp(normalize(mul(normalize(ts_blend_normal), TBN)), normalize(mul(normalize(ts_normal), TBN)), blend_coeff);
 
 		// Dirt (B-channel).
 		blend_coeff = (1 - blend_mask.b * m_dirt_alpha * DATA_VERTEX_COLOR.b);
