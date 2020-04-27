@@ -12,6 +12,7 @@ data/.cache_textures/
 data/.thumbnails/
 data/.runtimes/
 data/csharp_template/
+data/bake_lighting/
 data/Test/
 
 

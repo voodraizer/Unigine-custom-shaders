@@ -71,7 +71,12 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 		ts_blend_normal = lerp(float3(0.0, 0.0, 1.0), ts_blend_normal, m_normal_scale);
 		final_normal = lerp(normalize(mul(normalize(ts_blend_normal), TBN)), normalize(mul(normalize(ts_normal), TBN)), blend_coeff);
 
+		#ifdef PARALLAX
+			
+		#endif
+
 		// Blend 2-nd texture (G-channel).
+		// TODO
 
 		// Dirt (B-channel).
 		blend_coeff = (1 - blend_mask.b * m_dirt_alpha * DATA_VERTEX_COLOR.b);
