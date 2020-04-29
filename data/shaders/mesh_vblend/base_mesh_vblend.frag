@@ -20,6 +20,7 @@
 UNIFORM float m_blend_factor;
 UNIFORM float m_blend_falloff;
 UNIFORM float m_blend_alpha;
+UNIFORM float m_blend_normals;
 
 UNIFORM float m_dirt_alpha;
 UNIFORM float m_dirt_roughness_coeff;
@@ -69,10 +70,10 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 		float3 ts_blend_normal = blend_normal.xyz;
 		ts_blend_normal.z = getNormalZ(ts_blend_normal);
 		ts_blend_normal = lerp(float3(0.0, 0.0, 1.0), ts_blend_normal, m_normal_scale);
-		final_normal = lerp(normalize(mul(normalize(ts_blend_normal), TBN)), normalize(mul(normalize(ts_normal), TBN)), blend_coeff);
+		final_normal = lerp(normalize(mul(normalize(ts_blend_normal), TBN)), normalize(mul(normalize(ts_normal), TBN)), blend_coeff * m_blend_normals);
 
 		#ifdef PARALLAX
-			
+
 		#endif
 
 		// Blend 2-nd texture (G-channel).
