@@ -17,10 +17,18 @@
 	// UNIFORM float m_blend_factor;
 	// UNIFORM float m_blend_falloff;
 	// UNIFORM float m_blend_alpha;
+	// UNIFORM float m_blend_normals;
+
+	// UNIFORM float m_blend_factor_g;
+	// UNIFORM float m_blend_falloff_g;
+	// UNIFORM float m_blend_alpha_g;
 
 	// UNIFORM float m_dirt_alpha;
-	// UNIFORM float m_dirt_gloss_coeff;
+	// UNIFORM float m_dirt_roughness_coeff;
 // END
+
+UNIFORM float m_blend_scale_uv_2;
+UNIFORM float m_blend_scale_uv_3;
 
 UNIFORM float m_blend_factor;
 UNIFORM float m_blend_falloff;
@@ -58,17 +66,26 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 
 	#ifdef VERTEX_COLOR_BLENDING
 	
-		float4 blend_color =  TEXTURE_BASE(TEX_ALBEDO_BLEND);
-		float4 blend_shading = TEXTURE_BASE(TEX_BLEND_SHADING);
-		float4 blend_normal = TEXTURE_BASE_NORMAL(TEX_BLEND_NORMAL);
-		float4 blend_mask =  TEXTURE_BASE(TEX_BLEND_MASK);
+		// float4 blend_color =  TEXTURE_BASE(TEX_ALBEDO_BLEND);
+		// float4 blend_shading = TEXTURE_BASE(TEX_BLEND_SHADING);
+		// float4 blend_normal = TEXTURE_BASE_NORMAL(TEX_BLEND_NORMAL);
+		// float4 blend_mask =  TEXTURE_BASE(TEX_BLEND_MASK);
+
+		float2 texcoord_orig = DATA_UV.xy;
+		float2 texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_2);
+
+		float4 blend_color = TEXTURE(TEX_ALBEDO_BLEND, texcoord_modif);
+		float4 blend_shading = TEXTURE(TEX_BLEND_SHADING, texcoord_modif);
+		float4 blend_normal = TEXTURE(TEX_BLEND_NORMAL, texcoord_modif);
+
+		texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_3);
+		float4 blend_mask =  TEXTURE(TEX_BLEND_MASK, texcoord_modif);
 
 		float3 final_albedo;
 		float3 final_shading = float3(0, 0, 0);
 		float3 final_normal = float3(0, 0, 1.0);
 
 		// Blend 1-st texture (R-channel).
-		// m_blend_factor = 0.5f; m_blend_falloff = 4.0f; m_blend_alpha = 1.3f;
 
 		float blend_coeff = m_blend_alpha * blend_mask.r * (1 + m_blend_factor) * DATA_VERTEX_COLOR.r;
 		blend_coeff = saturate(pow(blend_coeff, m_blend_falloff));
@@ -92,7 +109,6 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 			float4 blend_shading_g = TEXTURE_BASE(TEX_BLEND_SHADING_G);
 			float4 blend_normal_g = TEXTURE_BASE_NORMAL(TEX_BLEND_NORMAL_G);
 
-			// float blend_coeff_g = DATA_VERTEX_COLOR.g * blend_mask.g * 2.0;
 			float blend_coeff_g = m_blend_alpha_g * blend_mask.g * (1 + m_blend_factor_g) * DATA_VERTEX_COLOR.g;
 			blend_coeff_g = saturate(pow(blend_coeff_g, m_blend_falloff_g));
 
@@ -113,7 +129,7 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 		final_shading.g = final_shading.g * lerp(final_shading.g * m_dirt_roughness_coeff, final_shading.g, blend_coeff);
 
 
-
+		// Store.
 		gbuffer.albedo = final_albedo;
 		gbuffer.metalness = final_shading.r;
 		gbuffer.roughness = final_shading.g;
