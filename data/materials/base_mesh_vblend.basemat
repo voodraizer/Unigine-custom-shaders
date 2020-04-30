@@ -199,22 +199,22 @@
 	</group>
 
 	<group name="Blending">
-		<slider	name="blend_scale_uv_2"		vertex_color_blending="1"	min="0.0" max="10.0" workflow="0"	title="UV scale 2nd set"	tooltip="UV scale 2nd texture set.">1.0</slider>
-		<slider	name="blend_scale_uv_3"		vertex_color_blending="1"	min="0.0" max="10.0" workflow="0"	title="UV scale mask"	tooltip="UV scale mask.">1.0</slider>
-		<slider	name="blend_scale_uv_4"		vertex_color_blending_g="1"	min="0.0" max="10.0" workflow="0"	title="UV scale 3rd set"	tooltip="UV scale 3nd texture set.">1.0</slider>
+		<slider	name="blend_scale_uv_2"		vertex_color_blending="1"	min="0.0" max="10.0" workflow="0"	title="UV scale 2nd set"					tooltip="UV scale 2nd texture set.">1.0</slider>
+		<slider	name="blend_scale_uv_3"		vertex_color_blending="1"	min="0.0" max="10.0" workflow="0"	title="UV scale mask"						tooltip="UV scale mask.">1.0</slider>
+		<slider	name="blend_scale_uv_4"		vertex_color_blending_g="1"	min="0.0" max="10.0" workflow="0"	title="UV scale 3rd set"					tooltip="UV scale 3nd texture set.">1.0</slider>
 
-		<slider	name="blend_factor"		vertex_color_blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend factor (R)"	tooltip="Blend factor.">1.5</slider>
-		<slider	name="blend_falloff"		vertex_color_blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend fallof (R)"	tooltip="Blend falloff.">2.0</slider>
-		<slider name="blend_alpha" vertex_color_blending="1" min="0.0" max="20.0" max_expand="1" title="Blend alpha (R)"	tooltip="Blend alpha.">5.0</slider>
-		<slider name="blend_normals" vertex_color_blending="1" min="0.0" max="1.0" max_expand="1" title="Blend normals (R)"	tooltip="Blend normals.">0.7</slider>
+		<slider	name="blend_factor"			vertex_color_blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend factor (R)"					tooltip="Blend factor.">1.5</slider>
+		<slider	name="blend_falloff"		vertex_color_blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend fallof (R)"					tooltip="Blend falloff.">2.0</slider>
+		<slider name="blend_alpha" 			vertex_color_blending="1" 	min="0.0" max="20.0" workflow="0"	max_expand="1" title="Blend alpha (R)"		tooltip="Blend alpha.">5.0</slider>
+		<slider name="blend_normals" 		vertex_color_blending="1" 	min="0.0" max="1.0"  workflow="0"	max_expand="1" title="Blend normals (R)"	tooltip="Blend normals.">0.7</slider>
 
-		<slider	name="blend_factor_g"		vertex_color_blending_g="1"	min="0.0" max="20.0" workflow="0"	title="Blend factor (G)"	tooltip="Blend factor.">1.5</slider>
-		<slider	name="blend_falloff_g"		vertex_color_blending_g="1"	min="0.0" max="20.0" workflow="0"	title="Blend fallof (G)"	tooltip="Blend falloff.">1.5</slider>
-		<slider name="blend_alpha_g" vertex_color_blending_g="1" min="0.0" max="20.0" max_expand="1" title="Blend alpha (G)"	tooltip="Blend alpha.">3.0</slider>
-		<slider name="blend_normals_g" vertex_color_blending_g="1" min="0.0" max="1.0" max_expand="1" title="Blend normals (G)"	tooltip="Blend normals.">1.0</slider>
+		<slider	name="blend_factor_g"		vertex_color_blending_g="1"	min="0.0" max="20.0" workflow="0"	title="Blend factor (G)"					tooltip="Blend factor.">1.5</slider>
+		<slider	name="blend_falloff_g"		vertex_color_blending_g="1"	min="0.0" max="20.0" workflow="0"	title="Blend fallof (G)"					tooltip="Blend falloff.">1.5</slider>
+		<slider name="blend_alpha_g" 		vertex_color_blending_g="1" min="0.0" max="20.0" workflow="0"	max_expand="1" title="Blend alpha (G)"		tooltip="Blend alpha.">3.0</slider>
+		<slider name="blend_normals_g" 		vertex_color_blending_g="1" min="0.0" max="1.0"  workflow="0"	max_expand="1" title="Blend normals (G)"	tooltip="Blend normals.">1.0</slider>
 
-		<slider name="dirt_alpha" vertex_color_blending="1" min="0.0" max="1.0" max_expand="1" title="Dirt alpha"	tooltip="Dirt alpha.">0.3</slider>
-		<slider name="dirt_roughness_coeff" vertex_color_blending="1" min="0.0" max="2.0" max_expand="1" title="Dirt roughness"	tooltip="Dirt roughness coefficient">0.5</slider>
+		<slider name="dirt_alpha" 			vertex_color_blending="1" 	min="0.0" max="1.0"  workflow="0"	max_expand="1" title="Dirt alpha"			tooltip="Dirt alpha.">0.3</slider>
+		<slider name="dirt_roughness_coeff" vertex_color_blending="1" 	min="0.0" max="2.0"  workflow="0"	max_expand="1" title="Dirt roughness"		tooltip="Dirt roughness coefficient">0.5</slider>
 	</group>
 	
 	<group name="Detail">
@@ -392,19 +392,21 @@
 	</group>
 
 	<group name="Blending">
-		<texture unit="3" name="albedo_blend"	vertex_color_blending="1"   anisotropy="1" workflow="0" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
+		<texture unit="3" name="albedo_blend"		vertex_color_blending="1"		anisotropy="1" 	workflow="0" 	pass="deferred,transparent,refraction" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
 		
-		<texture unit="4" name="shading_blend"	vertex_color_blending="1"   anisotropy="1" pass="deferred,transparent,refraction" workflow="0" tooltip="&lt;p&gt;Shading texture, 4 channels: R - metalness map, G - roughness map, B - specular reflection intensity for non-metals, A - microfiber map&lt;/p&gt;">core/textures/common/white.dds</texture>
+		<texture unit="4" name="shading_blend"		vertex_color_blending="1"		anisotropy="1" 	workflow="0" 	pass="deferred,transparent,refraction" tooltip="&lt;p&gt;Shading texture, 4 channels: R - metalness map, G - roughness map, B - specular reflection intensity for non-metals, A - microfiber map&lt;/p&gt;">core/textures/common/white.dds</texture>
 		
-		<texture unit="5" name="normal_blend"	vertex_color_blending="1"	anisotropy="1" format="signed"	tooltip="&lt;p&gt;Normal texture:&lt;ul&gt;&lt;li&gt;2-channels: RG - normal map&lt;/li&gt;&lt;li&gt;3 channels: RG - normal map, B - opacity (available for transparent objects only, when the &lt;b&gt;Opacity map&lt;/b&gt; is set to &lt;i&gt;Normal&lt;/i&gt;)&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;This texture is used to fake a relief on a surface instead of using more polygons.&lt;/p&gt;">core/textures/common/normal.dds</texture>
+		<texture unit="5" name="normal_blend"		vertex_color_blending="1"		anisotropy="1"	workflow="0" 	pass="deferred,transparent,refraction" format="signed"	tooltip="&lt;p&gt;Normal texture:&lt;ul&gt;&lt;li&gt;2-channels: RG - normal map&lt;/li&gt;&lt;li&gt;3 channels: RG - normal map, B - opacity (available for transparent objects only, when the &lt;b&gt;Opacity map&lt;/b&gt; is set to &lt;i&gt;Normal&lt;/i&gt;)&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;This texture is used to fake a relief on a surface instead of using more polygons.&lt;/p&gt;">core/textures/common/normal.dds</texture>
 
-		<texture unit="7" name="albedo_blend_g"	 vertex_color_blending_g="1"  anisotropy="1" workflow="0" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
+		<texture unit="7" name="albedo_blend_g"	 	vertex_color_blending_g="1"		anisotropy="1" 	workflow="0" 	pass="deferred,transparent,refraction" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
 		
-		<texture unit="8" name="shading_blend_g"  vertex_color_blending_g="1"  anisotropy="1" pass="deferred,transparent,refraction" workflow="0" tooltip="&lt;p&gt;Shading texture, 4 channels: R - metalness map, G - roughness map, B - specular reflection intensity for non-metals, A - microfiber map&lt;/p&gt;">core/textures/common/white.dds</texture>
+		<texture unit="8" name="shading_blend_g"  	vertex_color_blending_g="1"		anisotropy="1" 	workflow="0" 	pass="deferred,transparent,refraction" tooltip="&lt;p&gt;Shading texture, 4 channels: R - metalness map, G - roughness map, B - specular reflection intensity for non-metals, A - microfiber map&lt;/p&gt;">core/textures/common/white.dds</texture>
 		
-		<texture unit="9" name="normal_blend_g"	 vertex_color_blending_g="1"	anisotropy="1" format="signed"	tooltip="&lt;p&gt;Normal texture:&lt;ul&gt;&lt;li&gt;2-channels: RG - normal map&lt;/li&gt;&lt;li&gt;3 channels: RG - normal map, B - opacity (available for transparent objects only, when the &lt;b&gt;Opacity map&lt;/b&gt; is set to &lt;i&gt;Normal&lt;/i&gt;)&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;This texture is used to fake a relief on a surface instead of using more polygons.&lt;/p&gt;">core/textures/common/normal.dds</texture>
+		<texture unit="9" name="normal_blend_g"	 	vertex_color_blending_g="1"		anisotropy="1" 	workflow="0" 	pass="deferred,transparent,refraction" format="signed"	tooltip="&lt;p&gt;Normal texture:&lt;ul&gt;&lt;li&gt;2-channels: RG - normal map&lt;/li&gt;&lt;li&gt;3 channels: RG - normal map, B - opacity (available for transparent objects only, when the &lt;b&gt;Opacity map&lt;/b&gt; is set to &lt;i&gt;Normal&lt;/i&gt;)&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;This texture is used to fake a relief on a surface instead of using more polygons.&lt;/p&gt;">core/textures/common/normal.dds</texture>
+	</group>
 
-		<texture unit="6" name="mask_blend"	 vertex_color_blending="1"  anisotropy="1" workflow="0" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
+	<group name="Blending mask">
+		<texture unit="6" name="mask_blend"	 		anisotropy="1" 	workflow="0" 	pass="deferred,transparent,refraction" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
 	</group>
 	
 	<group name="Detail">
