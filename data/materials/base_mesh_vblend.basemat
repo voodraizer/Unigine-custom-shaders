@@ -199,8 +199,9 @@
 	</group>
 
 	<group name="Blending">
-		<slider	name="blend_scale_uv_2"		vertex_color_blending_g="1"	min="0.0" max="10.0" workflow="0"	title="UV scale 2"	tooltip="UV scale 2nd texture set.">1.0</slider>
-		<slider	name="blend_scale_uv_3"		vertex_color_blending="1"	min="0.0" max="10.0" workflow="0"	title="UV scale 3"	tooltip="UV scale mask.">1.0</slider>
+		<slider	name="blend_scale_uv_2"		vertex_color_blending="1"	min="0.0" max="10.0" workflow="0"	title="UV scale 2nd set"	tooltip="UV scale 2nd texture set.">1.0</slider>
+		<slider	name="blend_scale_uv_3"		vertex_color_blending="1"	min="0.0" max="10.0" workflow="0"	title="UV scale mask"	tooltip="UV scale mask.">1.0</slider>
+		<slider	name="blend_scale_uv_4"		vertex_color_blending_g="1"	min="0.0" max="10.0" workflow="0"	title="UV scale 3rd set"	tooltip="UV scale 3nd texture set.">1.0</slider>
 
 		<slider	name="blend_factor"		vertex_color_blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend factor (R)"	tooltip="Blend factor.">1.5</slider>
 		<slider	name="blend_falloff"		vertex_color_blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend fallof (R)"	tooltip="Blend falloff.">0.3</slider>
@@ -396,11 +397,11 @@
 		
 		<texture unit="5" name="normal_blend"	blending="1"	anisotropy="1" format="signed"	tooltip="&lt;p&gt;Normal texture:&lt;ul&gt;&lt;li&gt;2-channels: RG - normal map&lt;/li&gt;&lt;li&gt;3 channels: RG - normal map, B - opacity (available for transparent objects only, when the &lt;b&gt;Opacity map&lt;/b&gt; is set to &lt;i&gt;Normal&lt;/i&gt;)&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;This texture is used to fake a relief on a surface instead of using more polygons.&lt;/p&gt;">core/textures/common/normal.dds</texture>
 
-		<texture unit="7" name="albedo_blend_g"	blending="1" vertex_color_blending_g="1"  anisotropy="1" workflow="0" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
+		<texture unit="7" name="albedo_blend_g"	 vertex_color_blending_g="1"  anisotropy="1" workflow="0" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
 		
-		<texture unit="8" name="shading_blend_g"	blending="1" vertex_color_blending_g="1"  anisotropy="1" pass="deferred,transparent,refraction" workflow="0" tooltip="&lt;p&gt;Shading texture, 4 channels: R - metalness map, G - roughness map, B - specular reflection intensity for non-metals, A - microfiber map&lt;/p&gt;">core/textures/common/white.dds</texture>
+		<texture unit="8" name="shading_blend_g"  vertex_color_blending_g="1"  anisotropy="1" pass="deferred,transparent,refraction" workflow="0" tooltip="&lt;p&gt;Shading texture, 4 channels: R - metalness map, G - roughness map, B - specular reflection intensity for non-metals, A - microfiber map&lt;/p&gt;">core/textures/common/white.dds</texture>
 		
-		<texture unit="9" name="normal_blend_g"	blending="1" vertex_color_blending_g="1"	anisotropy="1" format="signed"	tooltip="&lt;p&gt;Normal texture:&lt;ul&gt;&lt;li&gt;2-channels: RG - normal map&lt;/li&gt;&lt;li&gt;3 channels: RG - normal map, B - opacity (available for transparent objects only, when the &lt;b&gt;Opacity map&lt;/b&gt; is set to &lt;i&gt;Normal&lt;/i&gt;)&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;This texture is used to fake a relief on a surface instead of using more polygons.&lt;/p&gt;">core/textures/common/normal.dds</texture>
+		<texture unit="9" name="normal_blend_g"	 vertex_color_blending_g="1"	anisotropy="1" format="signed"	tooltip="&lt;p&gt;Normal texture:&lt;ul&gt;&lt;li&gt;2-channels: RG - normal map&lt;/li&gt;&lt;li&gt;3 channels: RG - normal map, B - opacity (available for transparent objects only, when the &lt;b&gt;Opacity map&lt;/b&gt; is set to &lt;i&gt;Normal&lt;/i&gt;)&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;This texture is used to fake a relief on a surface instead of using more polygons.&lt;/p&gt;">core/textures/common/normal.dds</texture>
 
 		<texture unit="6" name="mask_blend"	blending="1"   anisotropy="1" workflow="0" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
 	</group>

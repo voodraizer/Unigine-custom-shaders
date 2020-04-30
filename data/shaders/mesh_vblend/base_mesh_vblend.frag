@@ -29,6 +29,7 @@
 
 UNIFORM float m_blend_scale_uv_2;
 UNIFORM float m_blend_scale_uv_3;
+UNIFORM float m_blend_scale_uv_4;
 
 UNIFORM float m_blend_factor;
 UNIFORM float m_blend_falloff;
@@ -105,9 +106,14 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 		// Blend 2-nd texture (G-channel).
 		#ifdef VERTEX_COLOR_BLENDING_G
 
-			float4 blend_color_g =  TEXTURE_BASE(TEX_ALBEDO_BLEND_G);
-			float4 blend_shading_g = TEXTURE_BASE(TEX_BLEND_SHADING_G);
-			float4 blend_normal_g = TEXTURE_BASE_NORMAL(TEX_BLEND_NORMAL_G);
+			// float4 blend_color_g =  TEXTURE_BASE(TEX_ALBEDO_BLEND_G);
+			// float4 blend_shading_g = TEXTURE_BASE(TEX_BLEND_SHADING_G);
+			// float4 blend_normal_g = TEXTURE_BASE_NORMAL(TEX_BLEND_NORMAL_G);
+
+			texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_4);
+			float4 blend_color_g =  TEXTURE(TEX_ALBEDO_BLEND_G, texcoord_modif);
+			float4 blend_shading_g = TEXTURE(TEX_BLEND_SHADING_G, texcoord_modif);
+			float4 blend_normal_g = TEXTURE(TEX_BLEND_NORMAL_G, texcoord_modif);
 
 			float blend_coeff_g = m_blend_alpha_g * blend_mask.g * (1 + m_blend_factor_g) * DATA_VERTEX_COLOR.g;
 			blend_coeff_g = saturate(pow(blend_coeff_g, m_blend_falloff_g));
