@@ -13,35 +13,25 @@
 	#endif
 #endif
 
-// CBUFFER(parameters)
-	// UNIFORM float m_blend_factor;
-	// UNIFORM float m_blend_falloff;
-	// UNIFORM float m_blend_alpha;
-	// UNIFORM float m_blend_normals;
+CBUFFER(parameters)
+	UNIFORM float m_blend_scale_uv_2;
+	UNIFORM float m_blend_scale_uv_3;
+	UNIFORM float m_blend_scale_uv_4;
 
-	// UNIFORM float m_blend_factor_g;
-	// UNIFORM float m_blend_falloff_g;
-	// UNIFORM float m_blend_alpha_g;
+	UNIFORM float m_blend_factor;
+	UNIFORM float m_blend_falloff;
+	UNIFORM float m_blend_alpha;
+	UNIFORM float m_blend_normals;
 
-	// UNIFORM float m_dirt_alpha;
-	// UNIFORM float m_dirt_roughness_coeff;
-// END
+	UNIFORM float m_blend_factor_g;
+	UNIFORM float m_blend_falloff_g;
+	UNIFORM float m_blend_alpha_g;
+	UNIFORM float m_blend_normals_g;
 
-UNIFORM float m_blend_scale_uv_2;
-UNIFORM float m_blend_scale_uv_3;
-UNIFORM float m_blend_scale_uv_4;
+	UNIFORM float m_dirt_alpha;
+	UNIFORM float m_dirt_roughness_coeff;
+END
 
-UNIFORM float m_blend_factor;
-UNIFORM float m_blend_falloff;
-UNIFORM float m_blend_alpha;
-UNIFORM float m_blend_normals;
-
-UNIFORM float m_blend_factor_g;
-UNIFORM float m_blend_falloff_g;
-UNIFORM float m_blend_alpha_g;
-
-UNIFORM float m_dirt_alpha;
-UNIFORM float m_dirt_roughness_coeff;
 
 MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 	#include <core/shaders/mesh/common/fragment.h>
@@ -66,11 +56,6 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 	#endif
 
 	#ifdef VERTEX_COLOR_BLENDING
-	
-		// float4 blend_color =  TEXTURE_BASE(TEX_ALBEDO_BLEND);
-		// float4 blend_shading = TEXTURE_BASE(TEX_BLEND_SHADING);
-		// float4 blend_normal = TEXTURE_BASE_NORMAL(TEX_BLEND_NORMAL);
-		// float4 blend_mask =  TEXTURE_BASE(TEX_BLEND_MASK);
 
 		float2 texcoord_orig = DATA_UV.xy;
 		float2 texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_2);
@@ -106,10 +91,6 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 		// Blend 2-nd texture (G-channel).
 		#ifdef VERTEX_COLOR_BLENDING_G
 
-			// float4 blend_color_g =  TEXTURE_BASE(TEX_ALBEDO_BLEND_G);
-			// float4 blend_shading_g = TEXTURE_BASE(TEX_BLEND_SHADING_G);
-			// float4 blend_normal_g = TEXTURE_BASE_NORMAL(TEX_BLEND_NORMAL_G);
-
 			texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_4);
 			float4 blend_color_g =  TEXTURE(TEX_ALBEDO_BLEND_G, texcoord_modif);
 			float4 blend_shading_g = TEXTURE(TEX_BLEND_SHADING_G, texcoord_modif);
@@ -120,11 +101,12 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 
 			final_albedo = lerp(final_albedo.rgb, blend_color_g.rgb, blend_coeff_g);
 
+			final_shading.g = lerp(final_shading.g, blend_shading_g.g, blend_coeff_g);
+
 			ts_blend_normal = blend_normal_g.xyz;
 			ts_blend_normal.z = getNormalZ(ts_blend_normal);
 			ts_blend_normal = lerp(float3(0.0, 0.0, 1.0), ts_blend_normal, m_normal_scale);
-			// final_normal = lerp(final_normal, normalize(mul(normalize(ts_blend_normal), TBN)), saturate(blend_coeff_g));
-			final_normal = lerp(final_normal, normalize(mul(normalize(ts_blend_normal), TBN)), blend_coeff_g);
+			final_normal = lerp(final_normal, normalize(mul(normalize(ts_blend_normal), TBN)), blend_coeff_g * m_blend_normals_g);
 
 		#endif
 
