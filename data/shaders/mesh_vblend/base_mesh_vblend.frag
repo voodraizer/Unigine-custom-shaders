@@ -6,6 +6,11 @@
 	INIT_TEXTURE(4, TEX_BLEND_SHADING)
 	INIT_TEXTURE(5, TEX_BLEND_NORMAL)
 	INIT_TEXTURE(6, TEX_BLEND_MASK)
+	#ifdef VERTEX_COLOR_BLENDING_G
+		INIT_TEXTURE(7, TEX_ALBEDO_BLEND_G)
+		INIT_TEXTURE(8, TEX_BLEND_SHADING_G)
+		INIT_TEXTURE(9, TEX_BLEND_NORMAL_G)
+	#endif
 #endif
 
 // CBUFFER(parameters)
@@ -21,6 +26,10 @@ UNIFORM float m_blend_factor;
 UNIFORM float m_blend_falloff;
 UNIFORM float m_blend_alpha;
 UNIFORM float m_blend_normals;
+
+UNIFORM float m_blend_factor_g;
+UNIFORM float m_blend_falloff_g;
+UNIFORM float m_blend_alpha_g;
 
 UNIFORM float m_dirt_alpha;
 UNIFORM float m_dirt_roughness_coeff;
@@ -77,7 +86,25 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 		#endif
 
 		// Blend 2-nd texture (G-channel).
-		// TODO
+		#ifdef VERTEX_COLOR_BLENDING_G
+
+			float4 blend_color_g =  TEXTURE_BASE(TEX_ALBEDO_BLEND_G);
+			float4 blend_shading_g = TEXTURE_BASE(TEX_BLEND_SHADING_G);
+			float4 blend_normal_g = TEXTURE_BASE_NORMAL(TEX_BLEND_NORMAL_G);
+
+			// float blend_coeff_g = DATA_VERTEX_COLOR.g * blend_mask.g * 2.0;
+			float blend_coeff_g = m_blend_alpha_g * blend_mask.g * (1 + m_blend_factor_g) * DATA_VERTEX_COLOR.g;
+			blend_coeff_g = saturate(pow(blend_coeff_g, m_blend_falloff_g));
+
+			final_albedo = lerp(final_albedo.rgb, blend_color_g.rgb, blend_coeff_g);
+
+			ts_blend_normal = blend_normal_g.xyz;
+			ts_blend_normal.z = getNormalZ(ts_blend_normal);
+			ts_blend_normal = lerp(float3(0.0, 0.0, 1.0), ts_blend_normal, m_normal_scale);
+			// final_normal = lerp(final_normal, normalize(mul(normalize(ts_blend_normal), TBN)), saturate(blend_coeff_g));
+			final_normal = lerp(final_normal, normalize(mul(normalize(ts_blend_normal), TBN)), blend_coeff_g);
+
+		#endif
 
 		// Dirt (B-channel).
 		blend_coeff = (1 - blend_mask.b * m_dirt_alpha * DATA_VERTEX_COLOR.b);

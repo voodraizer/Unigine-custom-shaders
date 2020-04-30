@@ -40,6 +40,7 @@
 		
 		<state name="vertex_color"		defines="name"	pass_defines="deferred,transparent,emission"	tooltip="&lt;p&gt;Use vertex colors for per-channel modulation of the albedo, AO, light map, emission, detail and auxiliary textures.&lt;/p&gt;&lt;p&gt;Can be used to reduce the number of textures and broaden the diversity of materials.&lt;/p&gt;"/>
 		<state name="vertex_color_blending"		defines="name"	pass_defines="deferred,emission"	tooltip="&lt;p&gt;Use vertex colors for blend textures by vertex color.&lt;/p&gt;&lt;p&gt;Can be used to reduce the number of textures and broaden the diversity of materials.&lt;/p&gt;Mask texture: R-blend texture, G-empty, B-dirt texture (multiply).&lt;p&gt;Vertex color: R-blend r-channel, G-none, B-blend b-channel.&lt;/p&gt;"/>
+		<state name="vertex_color_blending_g"		defines="name"	pass_defines="deferred,emission"	tooltip="&lt;p&gt;Use vertex colors for blend textures by vertex color.&lt;/p&gt;&lt;p&gt;Can be used to reduce the number of textures and broaden the diversity of materials.&lt;/p&gt;Mask texture: R-blend texture, G-empty, B-dirt texture (multiply).&lt;p&gt;Vertex color: R-blend r-channel, G-none, B-blend b-channel.&lt;/p&gt;"/>
 		<state name="planar_reflection"	defines="name"	pass_defines="ambient"							tooltip="&lt;p&gt;Enable rendering of dynamic reflections.&lt;/p&gt;&lt;p&gt;Using this option you can create realistic flat mirrors and flat reflective surfaces (parquet, flat varnished surfaces, etc.)&lt;/p&gt;"/>
 		<state name="vegetation"		defines="name"													tooltip="&lt;p&gt;Use the material for vegetation simulation.&lt;/p&gt;&lt;p&gt;Enabling this option allows you to create materials for vegetation crowns and trunks, that can be animated to add more realism.&lt;/p&gt;"/>
 		
@@ -202,6 +203,10 @@
 		<slider	name="blend_falloff"		vertex_color_blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend fallof"	tooltip="Blend falloff.">0.3</slider>
 		<slider name="blend_alpha" vertex_color_blending="1" min="0.0" max="20.0" max_expand="1" title="Blend alpha"	tooltip="Blend alpha.">0.1</slider>
 		<slider name="blend_normals" vertex_color_blending="1" min="0.0" max="1.0" max_expand="1" title="Blend normals"	tooltip="Blend normals.">0.8</slider>
+
+		<slider	name="blend_factor_g"		vertex_color_blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend factor G"	tooltip="Blend factor.">1.5</slider>
+		<slider	name="blend_falloff_g"		vertex_color_blending="1"	min="0.0" max="20.0" workflow="0"	title="Blend fallof G"	tooltip="Blend falloff.">0.3</slider>
+		<slider name="blend_alpha_g" vertex_color_blending="1" min="0.0" max="20.0" max_expand="1" title="Blend alpha G"	tooltip="Blend alpha.">0.1</slider>
 
 		<slider name="dirt_alpha" vertex_color_blending="1" min="0.0" max="1.0" max_expand="1" title="Dirt alpha"	tooltip="Dirt alpha.">0.3</slider>
 		<slider name="dirt_roughness_coeff" vertex_color_blending="1" min="0.0" max="2.0" max_expand="1" title="Dirt roughness coeff"	tooltip="Dirt roughness coefficient">0.5</slider>
@@ -387,6 +392,12 @@
 		<texture unit="4" name="shading_blend"	blending="1"   anisotropy="1" pass="deferred,transparent,refraction" workflow="0" tooltip="&lt;p&gt;Shading texture, 4 channels: R - metalness map, G - roughness map, B - specular reflection intensity for non-metals, A - microfiber map&lt;/p&gt;">core/textures/common/white.dds</texture>
 		
 		<texture unit="5" name="normal_blend"	blending="1"	anisotropy="1" format="signed"	tooltip="&lt;p&gt;Normal texture:&lt;ul&gt;&lt;li&gt;2-channels: RG - normal map&lt;/li&gt;&lt;li&gt;3 channels: RG - normal map, B - opacity (available for transparent objects only, when the &lt;b&gt;Opacity map&lt;/b&gt; is set to &lt;i&gt;Normal&lt;/i&gt;)&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;This texture is used to fake a relief on a surface instead of using more polygons.&lt;/p&gt;">core/textures/common/normal.dds</texture>
+
+		<texture unit="7" name="albedo_blend_g"	blending="1"   anisotropy="1" workflow="0" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
+		
+		<texture unit="8" name="shading_blend_g"	blending="1"   anisotropy="1" pass="deferred,transparent,refraction" workflow="0" tooltip="&lt;p&gt;Shading texture, 4 channels: R - metalness map, G - roughness map, B - specular reflection intensity for non-metals, A - microfiber map&lt;/p&gt;">core/textures/common/white.dds</texture>
+		
+		<texture unit="9" name="normal_blend_g"	blending="1"	anisotropy="1" format="signed"	tooltip="&lt;p&gt;Normal texture:&lt;ul&gt;&lt;li&gt;2-channels: RG - normal map&lt;/li&gt;&lt;li&gt;3 channels: RG - normal map, B - opacity (available for transparent objects only, when the &lt;b&gt;Opacity map&lt;/b&gt; is set to &lt;i&gt;Normal&lt;/i&gt;)&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;p&gt;This texture is used to fake a relief on a surface instead of using more polygons.&lt;/p&gt;">core/textures/common/normal.dds</texture>
 
 		<texture unit="6" name="mask_blend"	blending="1"   anisotropy="1" workflow="0" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
 	</group>
