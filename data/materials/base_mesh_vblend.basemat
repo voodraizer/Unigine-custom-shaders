@@ -205,22 +205,22 @@
 	</group>
 
 	<group name="Blending">
-		<slider	name="blend_scale_uv_2"		vertex_blend_enable="1"		vertex_color_blend_r="1"	min="0.0" max="10.0" workflow="0"					title="UV scale 2nd set"					tooltip="UV scale 2nd texture set.">1.0</slider>
-		<slider	name="blend_scale_uv_4"		vertex_blend_enable="1"		vertex_color_blend_g="1"	min="0.0" max="10.0" workflow="0"					title="UV scale 3rd set"					tooltip="UV scale 3nd texture set.">1.0</slider>
-		<slider	name="blend_scale_uv_3"		vertex_blend_enable="1"									min="0.0" max="10.0" workflow="0"					title="UV scale mask"						tooltip="UV scale mask.">1.0</slider>
+		<slider	name="blend_scale_uv_2"		vertex_blend_enable="1"		vertex_color_blend_r="1"								min="0.0" max="10.0" workflow="0"					title="UV scale 2nd set"					tooltip="UV scale 2nd texture set.">1.0</slider>
+		<slider	name="blend_scale_uv_4"		vertex_blend_enable="1"									vertex_color_blend_g="1"	min="0.0" max="10.0" workflow="0"					title="UV scale 3rd set"					tooltip="UV scale 3nd texture set.">1.0</slider>
+		<slider	name="blend_scale_uv_3"		vertex_blend_enable="1"																min="0.0" max="10.0" workflow="0"					title="UV scale mask"						tooltip="UV scale mask.">1.0</slider>
 
-		<slider	name="blend_factor_r"		vertex_blend_enable="1"		vertex_color_blend_r="1"	min="0.0" max="20.0" workflow="0"					title="Blend factor (R)"					tooltip="Blend factor.">1.5</slider>
-		<slider	name="blend_falloff_r"		vertex_blend_enable="1"		vertex_color_blend_r="1"	min="0.0" max="20.0" workflow="0"					title="Blend fallof (R)"					tooltip="Blend falloff.">2.0</slider>
-		<slider name="blend_alpha_r"		vertex_blend_enable="1"		vertex_color_blend_r="1" 	min="0.0" max="20.0" workflow="0"	max_expand="1" 	title="Blend alpha (R)"		tooltip="Blend alpha.">5.0</slider>
-		<slider name="blend_normals_r" 		vertex_blend_enable="1"		vertex_color_blend_r="1" 	min="0.0" max="1.0"  workflow="0"	max_expand="1" 	title="Blend normals (R)"	tooltip="Blend normals.">0.7</slider>
+		<slider	name="blend_factor_r"		vertex_blend_enable="1"		vertex_color_blend_r="1"								min="0.0" max="20.0" workflow="0"					title="Blend factor (R)"					tooltip="Blend factor.">1.5</slider>
+		<slider	name="blend_falloff_r"		vertex_blend_enable="1"		vertex_color_blend_r="1"								min="0.0" max="20.0" workflow="0"					title="Blend fallof (R)"					tooltip="Blend falloff.">2.0</slider>
+		<slider name="blend_alpha_r"		vertex_blend_enable="1"		vertex_color_blend_r="1" 								min="0.0" max="20.0" workflow="0"	max_expand="1" 	title="Blend alpha (R)"		tooltip="Blend alpha.">5.0</slider>
+		<slider name="blend_normals_r" 		vertex_blend_enable="1"		vertex_color_blend_r="1" 								min="0.0" max="1.0"  workflow="0"	max_expand="1" 	title="Blend normals (R)"	tooltip="Blend normals.">0.7</slider>
 
-		<slider	name="blend_factor_g"		vertex_blend_enable="1"		vertex_color_blend_g="1"	min="0.0" max="20.0" workflow="0"					title="Blend factor (G)"					tooltip="Blend factor.">1.5</slider>
-		<slider	name="blend_falloff_g"		vertex_blend_enable="1"		vertex_color_blend_g="1"	min="0.0" max="20.0" workflow="0"					title="Blend fallof (G)"					tooltip="Blend falloff.">1.5</slider>
-		<slider name="blend_alpha_g" 		vertex_blend_enable="1"		vertex_color_blend_g="1" min="0.0" max="20.0" workflow="0"	max_expand="1" 	title="Blend alpha (G)"		tooltip="Blend alpha.">3.0</slider>
-		<slider name="blend_normals_g" 		vertex_blend_enable="1"		vertex_color_blend_g="1" min="0.0" max="1.0"  workflow="0"	max_expand="1" 	title="Blend normals (G)"	tooltip="Blend normals.">1.0</slider>
+		<slider	name="blend_factor_g"		vertex_blend_enable="1"									vertex_color_blend_g="1"	min="0.0" max="20.0" workflow="0"					title="Blend factor (G)"					tooltip="Blend factor.">1.5</slider>
+		<slider	name="blend_falloff_g"		vertex_blend_enable="1"									vertex_color_blend_g="1"	min="0.0" max="20.0" workflow="0"					title="Blend fallof (G)"					tooltip="Blend falloff.">1.5</slider>
+		<slider name="blend_alpha_g" 		vertex_blend_enable="1"									vertex_color_blend_g="1"	min="0.0" max="20.0" workflow="0"	max_expand="1" 	title="Blend alpha (G)"		tooltip="Blend alpha.">3.0</slider>
+		<slider name="blend_normals_g" 		vertex_blend_enable="1"									vertex_color_blend_g="1"	min="0.0" max="1.0"  workflow="0"	max_expand="1" 	title="Blend normals (G)"	tooltip="Blend normals.">1.0</slider>
 
-		<slider name="dirt_alpha" 			vertex_blend_enable="1"									min="0.0" max="1.0"  workflow="0"	max_expand="1" 	title="Dirt alpha"			tooltip="Dirt alpha.">0.3</slider>
-		<slider name="dirt_roughness_coeff" vertex_blend_enable="1"									min="0.0" max="2.0"  workflow="0"	max_expand="1" 	title="Dirt roughness"		tooltip="Dirt roughness coefficient">0.5</slider>
+		<slider name="dirt_alpha" 			vertex_blend_enable="1"																min="0.0" max="1.0"  workflow="0"	max_expand="1" 	title="Dirt alpha"			tooltip="Dirt alpha.">0.3</slider>
+		<slider name="dirt_roughness_coeff" vertex_blend_enable="1"																min="0.0" max="2.0"  workflow="0"	max_expand="1" 	title="Dirt roughness"		tooltip="Dirt roughness coefficient">0.5</slider>
 	</group>
 	
 	<group name="Detail">
@@ -408,7 +408,7 @@
 	</group>
 
 	<group name="Blending mask">
-		<texture unit="6" name="mask_blend"	 		vertex_blend_enable="1"			anisotropy="1" 	workflow="0" 	pass="deferred,transparent,refraction" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
+		<texture unit="6" name="mask_blend"	 		vertex_blend_enable="1"	anisotropy="1" 	workflow="0" 	pass="deferred,transparent,refraction" tooltip="&lt;p&gt;Diffuse color texture, 4 channels: RGB - color, A - opacity&lt;/p&gt;">core/textures/common/white.dds</texture>
 	</group>
 	
 	<group name="Detail">
