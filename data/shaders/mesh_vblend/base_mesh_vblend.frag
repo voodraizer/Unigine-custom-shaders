@@ -2,15 +2,15 @@
 
 
 #ifdef VERTEX_COLOR_BLEND_R
-	INIT_TEXTURE(18, TEX_BLEND_ALBEDO_R)
-	INIT_TEXTURE(19, TEX_BLEND_SHADING_R)
-	INIT_TEXTURE(20, TEX_BLEND_NORMAL_R)
+	INIT_TEXTURE(3, TEX_BLEND_ALBEDO_R)
+	INIT_TEXTURE(4, TEX_BLEND_SHADING_R)
+	INIT_TEXTURE(5, TEX_BLEND_NORMAL_R)
 #endif
 
 #ifdef VERTEX_COLOR_BLEND_G
-	INIT_TEXTURE(21, TEX_BLEND_ALBEDO_G)
-	INIT_TEXTURE(22, TEX_BLEND_SHADING_G)
-	INIT_TEXTURE(23, TEX_BLEND_NORMAL_G)
+	INIT_TEXTURE(9, TEX_BLEND_ALBEDO_G)
+	INIT_TEXTURE(12, TEX_BLEND_SHADING_G)
+	INIT_TEXTURE(13, TEX_BLEND_NORMAL_G)
 #endif
 
 #ifdef VERTEX_COLOR_BLEND_R || VERTEX_COLOR_BLEND_G
@@ -106,8 +106,7 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 		final_albedo = lerp(blend_color_r.rgb, color.rgb, blend_coeff);
 		final_shading.g = lerp(blend_shading_r.g, shading.g, blend_coeff);
 
-		ts_blend_normal = blend_normal_r.xyz;
-		ts_blend_normal.z = getNormalZ(ts_blend_normal);
+		ts_blend_normal.z = getNormalZ(blend_normal_r.xyz);
 		ts_blend_normal = lerp(float3(0.0, 0.0, 1.0), ts_blend_normal, m_normal_scale);
 		final_normal = lerp(normalize(mul(normalize(ts_blend_normal), TBN)), final_normal, blend_coeff * m_blend_normals_r);
 
@@ -133,8 +132,7 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 
 		final_shading.g = lerp(final_shading.g, blend_shading_g.g, blend_coeff_g);
 
-		ts_blend_normal = blend_normal_g.xyz;
-		ts_blend_normal.z = getNormalZ(ts_blend_normal);
+		ts_blend_normal.z = getNormalZ(blend_normal_g.xyz);
 		ts_blend_normal = lerp(float3(0.0, 0.0, 1.0), ts_blend_normal, m_normal_scale);
 		final_normal = lerp(final_normal, normalize(mul(normalize(ts_blend_normal), TBN)), blend_coeff_g * m_blend_normals_g);
 
