@@ -1,19 +1,19 @@
 #include <shaders/mesh_vblend/common.h>
 
 
-#ifdef VERTEX_COLOR_BLENDING
+#ifdef VERTEX_COLOR_BLEND_R
 	INIT_TEXTURE(3, TEX_ALBEDO_BLEND)
 	INIT_TEXTURE(4, TEX_BLEND_SHADING)
 	INIT_TEXTURE(5, TEX_BLEND_NORMAL)
 #endif
 
-#ifdef VERTEX_COLOR_BLENDING_G
+#ifdef VERTEX_COLOR_BLEND_G
 	INIT_TEXTURE(7, TEX_ALBEDO_BLEND_G)
 	INIT_TEXTURE(8, TEX_BLEND_SHADING_G)
 	INIT_TEXTURE(9, TEX_BLEND_NORMAL_G)
 #endif
 
-#ifdef VERTEX_COLOR_BLENDING || VERTEX_COLOR_BLENDING_G
+#ifdef VERTEX_COLOR_BLEND_R || VERTEX_COLOR_BLEND_G
 	INIT_TEXTURE(6, TEX_BLEND_MASK)
 #endif
 
@@ -26,7 +26,7 @@ CBUFFER(parameters)
 	UNIFORM float m_blend_factor;
 	UNIFORM float m_blend_falloff;
 	UNIFORM float m_blend_alpha;
-	UNIFORM float m_blend_normals;
+	UNIFORM float m_blend_normals_r;
 
 	UNIFORM float m_blend_factor_g;
 	UNIFORM float m_blend_falloff_g;
@@ -64,9 +64,9 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 	float2 texcoord_orig = DATA_UV.xy;
 	float2 texcoord_modif = texcoord_orig;
 
-	float4 blend_color = color;
-	float4 blend_shading = shading;
-	float4 blend_normal = normal_map;
+	float4 blend_color_r = color;
+	float4 blend_shading_r = shading;
+	float4 blend_normal_r = normal_map;
 
 	float4 blend_color_g = float4(1, 1, 1, 1);
 	float4 blend_shading_g = float4(0, 0, 0, 1);
@@ -78,14 +78,14 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 
 	float3 final_albedo = color.rgb;
 	float3 final_shading = shading.rgb;
-	float3 final_normal = blend_normal.xyz;
+	float3 final_normal = blend_normal_r.xyz;
 
 	final_normal.z = getNormalZ(final_normal);
 	final_normal = lerp(float3(0.0, 0.0, 1.0), final_normal, m_normal_scale);
 	final_normal = normalize(mul(normalize(ts_normal), TBN));
 
 
-	#ifdef VERTEX_COLOR_BLENDING || VERTEX_COLOR_BLENDING_G
+	#ifdef VERTEX_COLOR_BLEND_R || VERTEX_COLOR_BLEND_G
 
 		texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_2);
 		blend_mask =  TEXTURE(TEX_BLEND_MASK, texcoord_modif);
@@ -95,20 +95,20 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 
 	#endif
 
-	#ifdef VERTEX_COLOR_BLENDING
+	#ifdef VERTEX_COLOR_BLEND_R
 
 		// Blend 1-st texture (R-channel).
-		blend_color = TEXTURE(TEX_ALBEDO_BLEND, texcoord_modif);
-		blend_shading = TEXTURE(TEX_BLEND_SHADING, texcoord_modif);
-		blend_normal = TEXTURE(TEX_BLEND_NORMAL, texcoord_modif);
+		blend_color_r = TEXTURE(TEX_ALBEDO_BLEND, texcoord_modif);
+		blend_shading_r = TEXTURE(TEX_BLEND_SHADING, texcoord_modif);
+		blend_normal_r = TEXTURE(TEX_BLEND_NORMAL, texcoord_modif);
 
-		final_albedo = lerp(blend_color.rgb, color.rgb, blend_coeff);
-		final_shading.g = lerp(blend_shading.g, shading.g, blend_coeff);
+		final_albedo = lerp(blend_color_r.rgb, color.rgb, blend_coeff);
+		final_shading.g = lerp(blend_shading_r.g, shading.g, blend_coeff);
 
-		ts_blend_normal = blend_normal.xyz;
+		ts_blend_normal = blend_normal_r.xyz;
 		ts_blend_normal.z = getNormalZ(ts_blend_normal);
 		ts_blend_normal = lerp(float3(0.0, 0.0, 1.0), ts_blend_normal, m_normal_scale);
-		final_normal = lerp(normalize(mul(normalize(ts_blend_normal), TBN)), final_normal, blend_coeff * m_blend_normals);
+		final_normal = lerp(normalize(mul(normalize(ts_blend_normal), TBN)), final_normal, blend_coeff * m_blend_normals_r);
 
 		#ifdef PARALLAX
 
@@ -116,7 +116,7 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 
 	#endif
 
-	#ifdef VERTEX_COLOR_BLENDING_G
+	#ifdef VERTEX_COLOR_BLEND_G
 
 		// Blend 2-nd texture (G-channel).
 		texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_4);
@@ -139,7 +139,7 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 
 	#endif
 
-	#ifdef VERTEX_COLOR_BLENDING || VERTEX_COLOR_BLENDING_G
+	#ifdef VERTEX_COLOR_BLEND_R || VERTEX_COLOR_BLEND_G
 		
 		// Dirt (B-channel).
 		texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_3);
