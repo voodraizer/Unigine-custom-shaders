@@ -2,15 +2,15 @@
 
 
 #ifdef VERTEX_COLOR_BLEND_R
-	INIT_TEXTURE(3, TEX_ALBEDO_BLEND)
-	INIT_TEXTURE(4, TEX_BLEND_SHADING)
-	INIT_TEXTURE(5, TEX_BLEND_NORMAL)
+	INIT_TEXTURE(18, TEX_BLEND_ALBEDO_R)
+	INIT_TEXTURE(19, TEX_BLEND_SHADING_R)
+	INIT_TEXTURE(20, TEX_BLEND_NORMAL_R)
 #endif
 
 #ifdef VERTEX_COLOR_BLEND_G
-	INIT_TEXTURE(7, TEX_ALBEDO_BLEND_G)
-	INIT_TEXTURE(8, TEX_BLEND_SHADING_G)
-	INIT_TEXTURE(9, TEX_BLEND_NORMAL_G)
+	INIT_TEXTURE(21, TEX_BLEND_ALBEDO_G)
+	INIT_TEXTURE(22, TEX_BLEND_SHADING_G)
+	INIT_TEXTURE(23, TEX_BLEND_NORMAL_G)
 #endif
 
 #ifdef VERTEX_COLOR_BLEND_R || VERTEX_COLOR_BLEND_G
@@ -99,9 +99,9 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 
 		// Blend 1-st texture (R-channel).
 		texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_2);
-		blend_color_r = TEXTURE(TEX_ALBEDO_BLEND, texcoord_modif);
-		blend_shading_r = TEXTURE(TEX_BLEND_SHADING, texcoord_modif);
-		blend_normal_r = TEXTURE(TEX_BLEND_NORMAL, texcoord_modif);
+		blend_color_r = TEXTURE(TEX_BLEND_ALBEDO_R, texcoord_modif);
+		blend_shading_r = TEXTURE(TEX_BLEND_SHADING_R, texcoord_modif);
+		blend_normal_r = TEXTURE(TEX_BLEND_NORMAL_R, texcoord_modif);
 
 		final_albedo = lerp(blend_color_r.rgb, color.rgb, blend_coeff);
 		final_shading.g = lerp(blend_shading_r.g, shading.g, blend_coeff);
@@ -122,7 +122,7 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 		// Blend 2-nd texture (G-channel).
 		texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_4);
 
-		blend_color_g =  TEXTURE(TEX_ALBEDO_BLEND_G, texcoord_modif);
+		blend_color_g =  TEXTURE(TEX_BLEND_ALBEDO_G, texcoord_modif);
 		blend_shading_g = TEXTURE(TEX_BLEND_SHADING_G, texcoord_modif);
 		blend_normal_g = TEXTURE(TEX_BLEND_NORMAL_G, texcoord_modif);
 
