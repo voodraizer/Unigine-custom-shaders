@@ -23,9 +23,9 @@ CBUFFER(parameters)
 	UNIFORM float m_blend_scale_uv_3;
 	UNIFORM float m_blend_scale_uv_4;
 
-	UNIFORM float m_blend_factor;
-	UNIFORM float m_blend_falloff;
-	UNIFORM float m_blend_alpha;
+	UNIFORM float m_blend_factor_r;
+	UNIFORM float m_blend_falloff_r;
+	UNIFORM float m_blend_alpha_r;
 	UNIFORM float m_blend_normals_r;
 
 	UNIFORM float m_blend_factor_g;
@@ -87,17 +87,18 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 
 	#ifdef VERTEX_COLOR_BLEND_R || VERTEX_COLOR_BLEND_G
 
-		texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_2);
+		texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_3);
 		blend_mask =  TEXTURE(TEX_BLEND_MASK, texcoord_modif);
 
-		blend_coeff = m_blend_alpha * blend_mask.r * (1 + m_blend_factor) * DATA_VERTEX_COLOR.r;
-		blend_coeff = saturate(pow(blend_coeff, m_blend_falloff));
+		blend_coeff = m_blend_alpha_r * blend_mask.r * (1 + m_blend_factor_r) * DATA_VERTEX_COLOR.r;
+		blend_coeff = saturate(pow(blend_coeff, m_blend_falloff_r));
 
 	#endif
 
 	#ifdef VERTEX_COLOR_BLEND_R
 
 		// Blend 1-st texture (R-channel).
+		texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_2);
 		blend_color_r = TEXTURE(TEX_ALBEDO_BLEND, texcoord_modif);
 		blend_shading_r = TEXTURE(TEX_BLEND_SHADING, texcoord_modif);
 		blend_normal_r = TEXTURE(TEX_BLEND_NORMAL, texcoord_modif);
@@ -142,8 +143,6 @@ MAIN_BEGIN_DEFERRED(FRAGMENT_IN)
 	#ifdef VERTEX_COLOR_BLEND_R || VERTEX_COLOR_BLEND_G
 		
 		// Dirt (B-channel).
-		texcoord_modif = uvTransform(texcoord_orig, m_blend_scale_uv_3);
-
 		blend_coeff = (1 - blend_mask.b * m_dirt_alpha * DATA_VERTEX_COLOR.b);
 		final_albedo *= blend_coeff;
 
